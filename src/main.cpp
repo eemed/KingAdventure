@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <random>
 #include <ctime>
 #include "shape.h"
@@ -14,6 +15,11 @@ bool createWindow();
 bool createRenderer();
 void setupRenderer();
 
+
+bool setupTTF( const std::string &fontName );
+SDL_Texture* surfaceToTexture( SDL_Surface* surf );
+void createTextTextures();
+
 void render();
 void runGame();
 
@@ -25,8 +31,7 @@ int posY = 100;
 int sizeX = 600;
 int sizeY = 850;
 int blockSize = 40;
-std::string fontPath = "/home/eeme/code/cpp/tetrisv2/build/apps/res/DroidSansFallbackFull.tff";
-TTF_Font * font_a = TTF_OpenFont( fontPath, 20 );
+std::string fontPath = "/usr/share/fonts/truetype/roboto/hinted/Roboto-Bold.ttf";
 // take away the 10 block sizes and the gaps +1 from screen width
 int sidebar = (sizeX - 10 * (blockSize + 1)) / 2;
 
@@ -37,11 +42,15 @@ int blue;
 SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Rect block;
+TTF_Font* font;
 
 //Init board
 my_tetris::TetrisBoard board(10, 22);
 
 //Colors
+SDL_Color textColor = { 255, 255, 255, 255 }; // white
+SDL_Color backgroundColor = { 0, 0, 0, 255 }; // black
+
 int r[3] = { 255, 0, 0 };
 int g[3] = { 0, 255, 0 };
 int y[3] = { 255, 255, 0 };
@@ -63,7 +72,6 @@ int main()
     {
         return -1;
     }
-
     SDL_LoadWAV("/home/eeme/code/cpp/tetris/build/apps/res/tetris.wav", &wavSpec, &wavBuffer, &wavLength);
 
     deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, SDL_AUDIO_ALLOW_ANY_CHANGE);
@@ -74,8 +82,6 @@ int main()
     setRandomColor();
 
     board.mergeShape(my_tetris::getRandom(), 2,5);
-
-
 
     runGame();
 }
@@ -203,12 +209,6 @@ void render()
             }
         }
     }
-SDL_Color White = { 255, 255, 255 , 255};
-SDL_Surface * surfaceMessage = TFF_RenderText_Solid( font_a, "Tetris_Menu", White);
-SDL_Texture * message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-SDL_Rect message_rect;
-
-    SDL_RenderCopy(renderer, message, NULL, &message_rect);
     // Render the changes above
     SDL_RenderPresent( renderer );
 }
@@ -225,6 +225,10 @@ bool initAll()
         return false;
 
     setupRenderer();
+
+    if ( !setupTTF(fontPath.c_str()) )
+        return false;
+
     return true;
 }
 
@@ -302,4 +306,30 @@ void setRandomColor()
         default:
             break;
     }
+}
+
+bool setupTTF( const std::string &fontName )
+{
+    if( TTF_Init() == -1 )
+    {
+        std::cout << " Failed to init TTF: " << SDL_GetError() << std::endl;
+        return false;
+    }
+
+    font = TTF_OpenFont( fontName.c_str(), 24);
+
+    if ( font == nullptr )
+    {
+        std::cout << " Failed to laod font: " << SDL_GetError() << std::endl;
+        return false;
+    }
+    return true;
+}
+
+SDL_Texture* surfaceToTexture( SDL_Surface* surf )
+{
+    SDL_Texture * text;
+    text = SDL_CreateTextureFromSurface( renderer, surf );
+    SDL_FreeSurface( surf );
+    return text;
 }

@@ -1,8 +1,11 @@
 #include "menu.h"
 namespace my_tetris
 {
-    Menu::Menu()
-        : selected(0), size_m(0)
+    Menu::Menu(TTF_Font * fnt)
+        : selected(0), size_m(0), fnt(fnt),
+        textColor( { 60, 60, 60, 255 }),
+        backgroundColor( { 0, 0, 0, 255 }),
+        selectedColor( { 255, 255, 255, 255 } ), x(0), y(0)
     {
     }
 
@@ -13,6 +16,11 @@ namespace my_tetris
 
     Menu::~Menu()
     {
+        for(std::vector< SDL_Texture * >::size_type i = 0;
+                i < textures.size(); ++i)
+        {
+            SDL_DestroyTexture( textures[i] );
+        }
     }
 
     void Menu::up()
