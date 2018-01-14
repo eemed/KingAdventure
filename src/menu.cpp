@@ -1,5 +1,5 @@
 #include "menu.h"
-namespace my_tetris
+namespace sdl_games
 {
     Menu::Menu(TTF_Font * fnt)
         : selected(0), size_m(0), fnt(fnt),
@@ -10,7 +10,10 @@ namespace my_tetris
     }
 
     Menu::Menu(std::vector< std::string > entries)
-        : selected(0), options(entries), size_m(entries.size())
+        : selected(0), options(entries), size_m(entries.size()),
+        textColor( { 60, 60, 60, 255 }),
+        backgroundColor( { 0, 0, 0, 255 }),
+        selectedColor( { 255, 255, 255, 255 } ), x(0), y(0)
     {
     }
 
@@ -101,6 +104,7 @@ namespace my_tetris
     {
         return size_m;
     }
+
 
     std::ostream & operator<<(std::ostream & out, const Menu & menu)
     {
