@@ -3,7 +3,7 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-namespace my_tetris
+namespace sdl_games
 {
     class Menu
     {
