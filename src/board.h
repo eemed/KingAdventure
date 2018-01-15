@@ -30,7 +30,7 @@ namespace my_tetris
             std::pair<unsigned int, unsigned int> checkRotate();
             bool moveLeft();
             bool moveRight();
-            bool checkRow();
+            int checkRow();
             bool pushStuck(unsigned int n);
             bool lost();
     };

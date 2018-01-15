@@ -9,10 +9,10 @@ using namespace utils;
 using namespace games;
 
 //Window settings
-int posX = 600;
-int posY = 100;
-int sizeX = 600;
-int sizeY = 850;
+int posX = 160;
+int posY = 90;
+int sizeX = 1600;
+int sizeY = 900;
 
 //Font path
 std::string fontPath = "/usr/share/fonts/truetype/roboto/hinted/Roboto-Bold.ttf";
@@ -34,6 +34,9 @@ Uint32 wavLength;
 Uint8 *wavBuffer;
 SDL_AudioDeviceID deviceId;
 
+//SDL_LoadWAV("/home/eeme/code/cpp/tetris/build/apps/res/tetris.wav", &wavSpec, &wavBuffer, &wavLength);
+
+//deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, SDL_AUDIO_ALLOW_ANY_CHANGE);
 int main()
 {
     //Load SDL
@@ -45,10 +48,55 @@ int main()
     //Load font
     font = setupTTF( fontPath );
 
-    //SDL_LoadWAV("/home/eeme/code/cpp/tetris/build/apps/res/tetris.wav", &wavSpec, &wavBuffer, &wavLength);
 
-    //deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, SDL_AUDIO_ALLOW_ANY_CHANGE);
-
-    Tetris t(renderer, font, xPadding);
-    t.runGame();
+    std::vector< std::string > s;
+    s.push_back("Tetris");
+    s.push_back("Dummy");
+    s.push_back("Dummy");
+    s.push_back("Dummy");
+    s.push_back("Dummy");
+    s.push_back("Dummy");
+    s.push_back("Dummy");
+    s.push_back("Quit");
+    sdl_games::Menu menu( font, renderer, s);
+    bool cont = true;
+    while( cont )
+    {
+        SDL_Event event;
+        while( SDL_PollEvent( &event ) )
+        {
+            if( event.type == SDL_QUIT )
+            {
+                cont = false;
+            }
+            else if( event.type == SDL_KEYDOWN )
+            {
+                // Handle keypresses
+                switch ( event.key.keysym.sym )
+                {
+                    case SDLK_q:
+                        cont = false;
+                        break;
+                    case SDLK_SPACE:
+                        menu.press();
+                        break;
+                    case SDLK_DOWN:
+                        menu.down();
+                        break;
+                    case SDLK_UP:
+                        menu.up();
+                        break;
+                    case SDLK_LEFT:
+                        break;
+                    case SDLK_RIGHT:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        menu.render();
+        // ~140 FPS
+        SDL_Delay( 8 );
+    }
 }

@@ -17,6 +17,6 @@ namespace utils
     SDL_Renderer * createRenderer(SDL_Window *);
     void setupRenderer(SDL_Renderer *,const int & sizeX, const int & sizeY );
     TTF_Font * setupTTF( const std::string &fontName );
-    SDL_Texture* surfaceToTexture( SDL_Surface* surf );
+    SDL_Texture* surfaceToTexture( SDL_Surface* surf, SDL_Renderer *);
 }
 #endif //_UTILS_SDL_GAMES_
