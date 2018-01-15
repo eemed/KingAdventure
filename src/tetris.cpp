@@ -1,5 +1,6 @@
 #include "tetris.h"
 #include "utils.h"
+#include <iostream>
 using namespace utils;
 namespace games
 {
@@ -19,7 +20,11 @@ namespace games
 
     void Tetris::runGame()
     {
+        unsigned int stage = 0;
+        unsigned int score = 0;
+        unsigned int linesBroken = 0;
         // Merge first shape
+        setRandomColor(red, green, blue);
         board.mergeShape(my_tetris::getRandom(), 2,5);
         bool cont = true;
         unsigned int time = 0;
@@ -76,7 +81,7 @@ namespace games
                     board.mergeShape(my_tetris::getRandom(), 2,5);
                 }
 
-                if( board.checkRow() )
+                if( (linesBroken += board.checkRow()) != 0  )
                 {
                     //SDL_QueueAudio(deviceId, wavBuffer, wavLength);
                     //SDL_PauseAudioDevice( deviceId, 0);
@@ -93,7 +98,16 @@ namespace games
 
             render();
             ++time;
+            if( linesBroken >= 10 )
+            {
+                stage += 1;
+                //Leave the lines that went over 10
+                linesBroken = linesBroken % 10;
+                speed -= 5;
+            }
         }
+        std::cout << "[Tetris] Lines: " << stage * 10 + linesBroken <<
+            ", Score: " << score << std::endl;
     }
 
     void Tetris::render()

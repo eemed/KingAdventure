@@ -1,20 +1,25 @@
 #include "menu.h"
+#include "tetris.h"
+#include "utils.h"
+using namespace utils;
 namespace sdl_games
 {
-    Menu::Menu(TTF_Font * fnt)
+    Menu::Menu(TTF_Font * fnt, SDL_Renderer * renderer)
         : selected(0), size_m(0), fnt(fnt),
-        textColor( { 60, 60, 60, 255 }),
-        backgroundColor( { 0, 0, 0, 255 }),
-        selectedColor( { 255, 255, 255, 255 } ), x(0), y(0)
+        textColor( { 80, 80, 80, 255 }),
+        backgroundColor( { 10, 10, 10, 255 }),
+        selectedColor( { 255, 255, 255, 255 } ), x(0), y(0), renderer(renderer)
     {
+        updateTextures();
     }
 
-    Menu::Menu(std::vector< std::string > entries)
-        : selected(0), options(entries), size_m(entries.size()),
-        textColor( { 60, 60, 60, 255 }),
-        backgroundColor( { 0, 0, 0, 255 }),
-        selectedColor( { 255, 255, 255, 255 } ), x(0), y(0)
+    Menu::Menu(TTF_Font * fnt, SDL_Renderer * renderer, std::vector< std::string > entries)
+        : selected(0), games(entries), size_m(entries.size()), fnt(fnt),
+        textColor( { 80, 80, 80, 255 }),
+        backgroundColor( { 20, 20, 20, 255 }),
+        selectedColor( { 255, 255, 255, 255 } ), x(0), y(0), renderer(renderer)
     {
+        updateTextures();
     }
 
     Menu::~Menu()
@@ -22,34 +27,51 @@ namespace sdl_games
         for(std::vector< SDL_Texture * >::size_type i = 0;
                 i < textures.size(); ++i)
         {
-            SDL_DestroyTexture( textures[i] );
+            SDL_DestroyTexture( textures[i].first );
         }
     }
 
-    void Menu::up()
+    void Menu::press() const
     {
-        if( selected + 1 < size_m )
+        games::Tetris t(renderer, fnt, 50);
+        switch( selected )
         {
-            selected += 1;
+            case 0:
+                t.runGame();
+                break;
+
+            default:
+                break;
         }
     }
 
     void Menu::down()
     {
+        if( selected + 1 < size_m )
+        {
+            selected += 1;
+        }
+        updateTextures();
+    }
+
+    void Menu::up()
+    {
         if( selected != 0 )
         {
             selected -= 1;
         }
+        updateTextures();
     }
 
-    bool Menu::add(const std::string s) // add to end
+    bool Menu::add(std::string g) // add to end
     {
-        options.push_back( s );
+        games.push_back( g );
         size_m += 1;
+        updateTextures();
         return true;
     }
 
-    bool Menu::add(const std::string s, unsigned int i) // add to index i
+    bool Menu::add(std::string g, unsigned int i) // add to index i
     {
         if( i >= size_m )
         {
@@ -57,7 +79,7 @@ namespace sdl_games
         }
         else
         {
-            options.push_back( s );
+            games.push_back( g );
             size_m += 1;
             return true;
         }
@@ -65,11 +87,11 @@ namespace sdl_games
 
     bool Menu::del(std::string s) // Delete this menu entry
     {
-        for(std::vector< std::string >::size_type i = 0; i < options.size(); ++i)
+        for(std::vector< std::string >::size_type i = 0; i < games.size(); ++i)
         {
-            if( s == options[i] )
+            if( s == games[i] )
             {
-                options.erase( options.begin() + i );
+                games.erase( games.begin() + i );
                 return true;
             }
         }
@@ -84,14 +106,14 @@ namespace sdl_games
         }
         else
         {
-            options.erase( options.begin() + selected );
+            games.erase( games.begin() + i );
             return true;
         }
     }
 
     bool Menu::del() // Delete currently selected
     {
-        options.erase( options.begin() + selected);
+        games.erase( games.begin() + selected);
         return true;
     }
 
@@ -105,12 +127,63 @@ namespace sdl_games
         return size_m;
     }
 
+    bool Menu::updateTextures()
+    {
+        std::vector< std::pair< SDL_Texture *, SDL_Rect> > newTextures;
+        for(std::vector< std::string >::size_type i = 0; i < games.size(); ++i)
+        {
+            SDL_Rect shadedRect;
+            SDL_Surface* shaded;
+            if( selected == i )
+            {
+                shaded = TTF_RenderText_Shaded( fnt, games[i].c_str(), selectedColor, backgroundColor );
+            }
+            else
+            {
+                shaded = TTF_RenderText_Shaded( fnt, games[i].c_str(), textColor, backgroundColor );
+            }
+            SDL_Texture* shadedTexture = surfaceToTexture( shaded, renderer);
+
+            SDL_QueryTexture( shadedTexture , NULL, NULL, &shadedRect.w, &shadedRect.h );
+            shadedRect.x = 100;
+            //std::cout << games[i] << "\n";
+            if( i == 0 )
+            {
+                shadedRect.y = 0;
+            }
+            else
+            {
+                shadedRect.y = newTextures[i - 1].second.y + newTextures[i - 1].second.h + 20;
+            }
+            newTextures.push_back( std::pair< SDL_Texture *, SDL_Rect>(shadedTexture, shadedRect));
+
+        }
+            //
+            //
+            //Free old
+            //
+            //
+        textures = newTextures;
+        return true;
+    }
+    void Menu::render() const
+    {
+        SDL_SetRenderDrawColor( renderer, 20, 20, 20, 255 );
+        SDL_RenderClear( renderer );
+
+        // Render here
+        for( std::vector< SDL_Texture * >::size_type i = 0; i < textures.size(); ++i)
+        {
+            SDL_RenderCopy( renderer, textures[i].first, nullptr, &(textures[i].second) );
+        }
+        SDL_RenderPresent( renderer );
+    }
 
     std::ostream & operator<<(std::ostream & out, const Menu & menu)
     {
         for(unsigned int i = 0; i < menu.size_m; ++i)
         {
-            out << i+1 << ": " << menu.options[i] << std::endl;
+            out << i+1 << ": " << menu.games[i] << std::endl;
         }
         return out;
     }

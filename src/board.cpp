@@ -416,9 +416,9 @@ namespace my_tetris
         return true;
     }
 
-    bool TetrisBoard::checkRow()
+    int TetrisBoard::checkRow()
     {
-        bool deleted = false; // Flag to know if rows deleted
+        int deleted = 0;
         for(std::vector< std::vector<Square> >::size_type i = board.size() - 1;
                 i != 0; --i)
         {
@@ -434,7 +434,7 @@ namespace my_tetris
             {
                 pushStuck(i);
                 ++i;
-                deleted = true;
+                deleted += 1;
             }
         }
         return deleted;

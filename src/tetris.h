@@ -3,9 +3,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include "board.h"
+#include "game.h"
+#include <string>
 namespace games
 {
-    class Tetris
+    class Tetris : public utils::Game
     {
         private:
             SDL_Renderer * renderer;

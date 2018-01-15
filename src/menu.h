@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <utility>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 namespace sdl_games
@@ -9,22 +10,24 @@ namespace sdl_games
     {
         private:
             unsigned int selected; // Index of currently selected
-            std::vector< std::string > options; // Vector of all the options
+            std::vector< std::string > games; // Vector of all the options
             unsigned int size_m;
             TTF_Font * fnt;
             SDL_Color textColor;
             SDL_Color backgroundColor;
             SDL_Color selectedColor;
-            std::vector< SDL_Texture * > textures;
+            std::vector< std::pair<SDL_Texture *, SDL_Rect> > textures;
             int x;
             int y;
+            SDL_Renderer * renderer;
         public:
-            Menu(TTF_Font *);
-            Menu(std::vector< std::string > t);
+            Menu(TTF_Font *, SDL_Renderer *);
+            Menu(TTF_Font * fnt, SDL_Renderer * renderer, std::vector< std::string > t);
 
             ~Menu();
             void up();
             void down();
+            void press() const;
             bool add(std::string); // add to end
             bool add(std::string, unsigned int i); // add to index i
 
@@ -35,6 +38,7 @@ namespace sdl_games
             unsigned int getSelected() const;
             unsigned int size() const;
             bool updateTextures();
+            void render() const;
 
             friend std::ostream & operator<<(std::ostream & out, const Menu & menu);
     };

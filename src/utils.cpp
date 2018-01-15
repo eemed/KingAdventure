@@ -1,12 +1,13 @@
 #include "utils.h"
 namespace utils
-{   
+{
     int r[3] = { 255, 0, 0 };
     int g[3] = { 0, 255, 0 };
     int y[3] = { 255, 255, 0 };
     int o[3] = { 255, 128, 0 };
     int p[3] = { 255, 0, 255 };
     int v[3] = { 128, 0, 255 };
+    int w[3] = { 255, 255, 255 };
 
 
     bool initSDL()
@@ -78,6 +79,9 @@ namespace utils
                 break;
             case 5:
                 setColor( y, red, green, blue );
+                break;
+            case 6:
+                setColor( w, red, green, blue );
                 break;
             default:
                 break;
