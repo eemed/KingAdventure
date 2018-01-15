@@ -83,6 +83,7 @@ namespace my_tetris
     bool TetrisBoard::mergeShape(Shape s, unsigned int x, unsigned int y)
     {
         currentShape = s;
+        //std::cout << "Merge to >> " << x << "," << y << std::endl << s;
         for(std::vector< std::vector<Square> >::size_type i = 0;
                 i < s.getSquares().size(); ++i)
         {
@@ -92,6 +93,8 @@ namespace my_tetris
                 {
                     if ( board[i+x-2][j+y-2].getStuck() == true )
                     {
+                        //std::cout << "x >> " << i+x-2;
+                        //std::cout << "y >> " << j+y-2 << std::endl;
                         return false;
                     }
                 }
@@ -142,6 +145,7 @@ namespace my_tetris
         int posY = piv.second;
         if( piv.second < 2 and ( posY <= (int)(bound.second - piv.first) ))
         {
+            //std::cout << "first: " << piv.first << ", second: " << piv.second << ", boundF: " << bound.first << ", BSecond: " << bound.second << std::endl;
             posY = bound.second - piv.first;
         }
         if( piv.second > board[0].size() - 2 )
@@ -149,21 +153,26 @@ namespace my_tetris
             //std::cout << "first: " << piv.first << ", second: " << piv.second << ", boundF: " << bound.first << ", BSecond: " << bound.second << std::endl;
             posY -= piv.first - bound.first;
         }
+        //std::cout << "first: " << piv.first << ", second: " << piv.second << ", boundF: " << bound.first << ", BSecond: " << bound.second << std::endl;
+        //std::cout << "posX " << posX << ", posY: " << posY << std::endl;
         return std::pair<int, int>(posX, posY);
     }
 
     bool TetrisBoard::rotateShape()
     {
+        std::pair<int, int> original = getPivot();
         std::pair<int, int> piv = checkRotate();
         //std::cout << "x: " << piv.first << ", y: " << piv.second << std::endl;
         currentShape.rotate();
         clearActive();
         if( !mergeShape(currentShape, piv.first, piv.second) )
         {
+            clearActive();
             currentShape.rotate();
             currentShape.rotate();
             currentShape.rotate();
-            mergeShape(currentShape, piv.first, piv.second);
+            //std::cout << "Couldnt fit merge back to place" << std::endl;
+            mergeShape(currentShape, original.first, original.second);
             return false;
         }
         return true;
