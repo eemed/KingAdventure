@@ -27,6 +27,7 @@ namespace games
             ~Tetris();
             void runGame();
             void render();
+            std::string getEntry() const;
     };
 }
 #endif
