@@ -5,7 +5,7 @@ using namespace utils;
 namespace games
 {
     Tetris::Tetris(SDL_Renderer * rend, TTF_Font * fnt, int xPadding)
-        : renderer(rend), red(255), green(255), blue(255),
+        : Game("Tetris"), renderer(rend), red(255), green(255), blue(255),
         speed(50), font(fnt), board( my_tetris::TetrisBoard(10, 22)),
         blockSize(40), sidebar(xPadding)
     {
@@ -16,6 +16,12 @@ namespace games
     Tetris::~Tetris()
     {
         // Free all resources
+    }
+
+    std::string Tetris::getEntry() const
+    {
+        std::cout << "Fetched " << name << std::endl;
+        return name;
     }
 
     void Tetris::runGame()
