@@ -7,18 +7,12 @@ namespace sdl_games
     Menu::Menu(TTF_Font * fnt, SDL_Renderer * renderer)
         : selected(0), size_m(0), fnt(fnt),
         textColor( { 80, 80, 80, 255 }),
-        backgroundColor( { 10, 10, 10, 255 }),
-        selectedColor( { 255, 255, 255, 255 } ), x(0), y(0), renderer(renderer)
-    {
-        updateTextures();
-    }
-
-    Menu::Menu(TTF_Font * fnt, SDL_Renderer * renderer, std::vector< utils::Game * > entries)
-        : selected(0), games(entries), size_m(entries.size()), fnt(fnt),
-        textColor( { 80, 80, 80, 255 }),
         backgroundColor( { 20, 20, 20, 255 }),
         selectedColor( { 255, 255, 255, 255 } ), x(0), y(0), renderer(renderer)
     {
+        games.push_back("Tetris");
+        games.push_back("Quit");
+        size_m += 2;
         updateTextures();
     }
 
@@ -36,10 +30,13 @@ namespace sdl_games
         // Games in memory all the time or
         // all games created here and then chosen
         // how do I handle this
+        games::Tetris  *t = NULL;
+        std::cout << selected << std::endl;
         switch( selected )
         {
             case 0:
-                dynamic_cast< games::Tetris * >(games[0])->runGame();
+                t = new(games::Tetris)(renderer, fnt, 200);
+                t->runGame();
                 break;
 
             default:
@@ -65,7 +62,7 @@ namespace sdl_games
         updateTextures();
     }
 
-    bool Menu::add(utils::Game * g) // add to end
+    bool Menu::add(std::string g) // add to end
     {
         games.push_back( g );
         size_m += 1;
@@ -73,7 +70,7 @@ namespace sdl_games
         return true;
     }
 
-    bool Menu::add(utils::Game * g, unsigned int i) // add to index i
+    bool Menu::add(std::string g, unsigned int i) // add to index i
     {
         if( i >= size_m )
         {
@@ -91,7 +88,7 @@ namespace sdl_games
     {
         for(std::vector< std::string >::size_type i = 0; i < games.size(); ++i)
         {
-            if( s == games[i]->getEntry() )
+            if( s == games[i] )
             {
                 games.erase( games.begin() + i );
                 return true;
@@ -138,17 +135,17 @@ namespace sdl_games
             SDL_Surface* shaded;
             if( selected == i )
             {
-                shaded = TTF_RenderText_Shaded( fnt, games[i]->getEntry().c_str(), selectedColor, backgroundColor );
+                shaded = TTF_RenderText_Shaded( fnt, games[i].c_str(), selectedColor, backgroundColor );
             }
             else
             {
-                shaded = TTF_RenderText_Shaded( fnt, games[i]->getEntry().c_str(), textColor, backgroundColor );
+                shaded = TTF_RenderText_Shaded( fnt, games[i].c_str(), textColor, backgroundColor );
             }
             SDL_Texture* shadedTexture = surfaceToTexture( shaded, renderer);
 
             SDL_QueryTexture( shadedTexture , NULL, NULL, &shadedRect.w, &shadedRect.h );
             shadedRect.x = 100;
-            std::cout << games[i]->getEntry() << "\n";
+            std::cout << games[i] << "\n";
             if( i == 0 )
             {
                 shadedRect.y = 0;
@@ -185,7 +182,7 @@ namespace sdl_games
     {
         for(unsigned int i = 0; i < menu.size_m; ++i)
         {
-            out << i+1 << ": " << menu.games[i]->getEntry() << std::endl;
+            out << i+1 << ": " << menu.games[i] << std::endl;
         }
         return out;
     }
