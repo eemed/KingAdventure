@@ -49,11 +49,8 @@ int main()
     font = setupTTF( fontPath );
 
 
-    std::vector< utils::Game * > s;
-    games::Tetris * t = new(Tetris)(renderer, font, xPadding );
-    s.push_back(t);
 
-    sdl_games::Menu menu( font, renderer, s);
+    sdl_games::Menu menu( font, renderer);
     bool cont = true;
     while( cont )
     {
