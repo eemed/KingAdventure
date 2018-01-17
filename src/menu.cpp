@@ -27,16 +27,14 @@ namespace sdl_games
 
     void Menu::press()
     {
-        // Games in memory all the time or
-        // all games created here and then chosen
-        // how do I handle this
         games::Tetris  *t = NULL;
-        std::cout << selected << std::endl;
+        //std::cout << selected << std::endl;
         switch( selected )
         {
             case 0:
                 t = new(games::Tetris)(renderer, fnt, 200);
                 t->runGame();
+                delete t;
                 break;
 
             default:
@@ -145,7 +143,7 @@ namespace sdl_games
 
             SDL_QueryTexture( shadedTexture , NULL, NULL, &shadedRect.w, &shadedRect.h );
             shadedRect.x = 100;
-            std::cout << games[i] << "\n";
+            //std::cout << games[i] << "\n";
             if( i == 0 )
             {
                 shadedRect.y = 0;
