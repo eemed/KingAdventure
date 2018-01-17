@@ -106,6 +106,7 @@ namespace games
             ++time;
             if( linesBroken >= 10 )
             {
+                std::cout << "[Tetris] Stage " << stage + 2 << "!\n";
                 stage += 1;
                 //Leave the lines that went over 10
                 linesBroken = linesBroken % 10;
