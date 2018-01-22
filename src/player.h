@@ -7,8 +7,15 @@ namespace games
 {
     class Player : public utils::Renderable
     {
+        private:
+            std::string name;
         public:
             Player(std::string name);
+            void moveRight(const double &);
+            void moveLeft(const double &);
+            void jump(const double &);
+            void update(const std::vector< utils::Renderable > &, const int &, const double &);
+            bool checkCollide(const std::vector< utils::Renderable > &);
     };
 }
 #endif

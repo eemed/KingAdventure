@@ -4,6 +4,7 @@ LDFLAGS  := -L/usr/lib -lstdc++ -lm -lSDL2main -lSDL2 -lSDL2_ttf
 BUILD    := build
 OBJ_DIR  := $(BUILD)/objects
 APP_DIR  := $(BUILD)/apps
+RES_DIR  := $(APP_DIR)/res
 TARGET   := program
 INCLUDE  := -Iinclude/
 SRC      :=                      \
@@ -26,6 +27,8 @@ $(APP_DIR)/$(TARGET): $(OBJECTS)
 build:
 	@mkdir -p $(APP_DIR)
 	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(RES_DIR)
+	@cp res/* $(RES_DIR)
 
 clean:
 	rm -rf build/*

@@ -10,6 +10,8 @@ namespace utils
     int w[3] = { 255, 255, 255 };
 
 
+    // Basic SDL functions
+    // initilizing sdl window and renderer
     bool initSDL()
     {
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
@@ -44,9 +46,7 @@ namespace utils
 
     void setupRenderer(SDL_Renderer * renderer, const int & sizeX, const int & sizeY)
     {
-        // Set size of renderer to the same as window
         SDL_RenderSetLogicalSize( renderer, sizeX, sizeY );
-        // Set color of renderer to red
         SDL_SetRenderDrawColor( renderer, 255, 0, 0, 255 );
     }
 
@@ -88,6 +88,7 @@ namespace utils
         }
     }
 
+    // Setup font and return it
     TTF_Font * setupTTF( const std::string &fontName )
     {
         if( TTF_Init() == -1 )
@@ -106,11 +107,39 @@ namespace utils
         return font;
     }
 
+    //From surface to texture
     SDL_Texture * surfaceToTexture( SDL_Surface* surf , SDL_Renderer * renderer)
     {
         SDL_Texture * text;
         text = SDL_CreateTextureFromSurface( renderer, surf );
         SDL_FreeSurface( surf );
         return text;
+    }
+
+    //Renderable class
+    Renderable::Renderable(int x, int y, int width, int height, std::string spritePath)
+        : spritePath( spritePath )
+    {
+        rect.x = x;
+        rect.y = y;
+        rect.w = width;
+        rect.h = height;
+    }
+    Renderable::~Renderable()
+    {
+    }
+    bool Renderable::isOverlapping(const SDL_Rect & r) const
+    {
+        if( rect.y + rect.h > r.y and rect.y < r.y + r.h and ((rect.x + rect.w > r.x ) or
+                    rect.x < r.x + r.w))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    SDL_Rect & Renderable::getRect()
+    {
+        return rect;
     }
 }
