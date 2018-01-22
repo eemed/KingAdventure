@@ -22,7 +22,6 @@ int xPadding = (sizeX - 10 * (40 + 1)) / 2;
 
 SDL_Window* window;
 SDL_Renderer* renderer;
-SDL_Rect block;
 TTF_Font* font;
 
 //Colors

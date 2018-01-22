@@ -23,15 +23,14 @@ namespace utils
     // Utility classes for rendering and checking collision
     class Renderable
     {
-        private:
+        protected:
             SDL_Rect rect;
             std::string spritePath;
         public:
-            void render(int posX, int posY);
-            void relativeRender(int dx, int dy); // takes pos as relative to current pos
-            bool isOverlapping(SDL_Rect) const; // If contact is made
-            Renderable(int width, int height, std::string spritePath);
+            bool isOverlapping(const SDL_Rect &) const; // If contact is made
+            Renderable(int x, int y, int width, int height, std::string spritePath);
             ~Renderable();
+            SDL_Rect & getRect();
     };
 }
 #endif //_UTILS_SDL_GAMES_

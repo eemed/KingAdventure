@@ -1,6 +1,8 @@
 #include "menu.h"
 #include "tetris.h"
+#include "world.h"
 #include "utils.h"
+#include "player.h"
 using namespace utils;
 namespace sdl_games
 {
@@ -11,8 +13,9 @@ namespace sdl_games
         selectedColor( { 255, 255, 255, 255 } ), x(0), y(0), renderer(renderer)
     {
         games.push_back("Tetris");
+        games.push_back("Platform");
         games.push_back("Quit");
-        size_m += 2;
+        size_m += 3;
         updateTextures();
     }
 
@@ -28,6 +31,7 @@ namespace sdl_games
     void Menu::press()
     {
         games::Tetris  *t = NULL;
+        games::World * w = NULL;
         //std::cout << selected << std::endl;
         switch( selected )
         {
@@ -35,6 +39,11 @@ namespace sdl_games
                 t = new(games::Tetris)(renderer, fnt, 200);
                 t->runGame();
                 delete t;
+                break;
+            case 1:
+                w = new(games::World)(renderer, fnt, games::Player ("Jonne"));
+                w->runGame();
+                delete w;
                 break;
 
             default:
