@@ -31,6 +31,23 @@ namespace utils
             Renderable(int x, int y, int width, int height, std::string spritePath);
             ~Renderable();
             SDL_Rect & getRect();
+            SDL_Rect getRect() const;
+            int getYHigh();
+            int getXHigh();
+            int getYLow();
+            int getXLow();
+            int getMiddleX();
+            int getMiddleY();
+            int getHalfXLen();
+            int getHalfYLen();
+    };
+
+    class CollisionVector
+    {
+        public:
+            int x;
+            int y;
+            CollisionVector(int x, int y);
     };
 }
 #endif //_UTILS_SDL_GAMES_

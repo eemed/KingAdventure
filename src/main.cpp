@@ -5,8 +5,11 @@
 #include "menu.h"
 #include "utils.h"
 #include "tetris.h"
+#include "world.h"
 using namespace utils;
 using namespace games;
+
+void launch(int selected);
 
 //Window settings
 int posX = 160;
@@ -69,7 +72,7 @@ int main()
                         cont = false;
                         break;
                     case SDLK_SPACE:
-                        menu.press();
+                        launch( menu.getSelected() );
                         break;
                     case SDLK_DOWN:
                         menu.down();
@@ -89,5 +92,28 @@ int main()
         menu.render();
         // ~140 FPS
         SDL_Delay( 8 );
+    }
+}
+
+void launch(int selected)
+{
+    games::Tetris  *t = NULL;
+    games::World * w = NULL;
+    //std::cout << selected << std::endl;
+    switch( selected )
+    {
+        case 0:
+            t = new(games::Tetris)(renderer, font, 200);
+            t->runGame();
+            delete t;
+            break;
+        case 1:
+            w = new(games::World)(renderer, font, games::Player ("Jonne"));
+            w->runGame();
+            delete w;
+            break;
+
+        default:
+            break;
     }
 }
