@@ -125,21 +125,66 @@ namespace utils
         rect.w = width;
         rect.h = height;
     }
+
     Renderable::~Renderable()
     {
     }
+
     bool Renderable::isOverlapping(const SDL_Rect & r) const
     {
-        if( rect.y + rect.h > r.y and rect.y < r.y + r.h and ((rect.x + rect.w > r.x ) or
-                    rect.x < r.x + r.w))
+        if( ( ( rect.x + rect.w <= r.x) or ( rect.x >= r.x + r.w ) ) or
+             ( ( rect.y + rect.h <= r.y) or ( rect.y >= r.y + r.h ) ) )
         {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     SDL_Rect & Renderable::getRect()
     {
         return rect;
+    }
+    SDL_Rect Renderable::getRect() const
+    {
+        return rect;
+    }
+
+    int Renderable::getYHigh()
+    {
+        return rect.y;
+    }
+    int Renderable::getXHigh()
+    {
+        return rect.x + rect.w;
+    }
+    int Renderable::getYLow()
+    {
+        return rect.y + rect.h;
+    }
+    int Renderable::getXLow()
+    {
+        return rect.x;
+    }
+    int Renderable::getMiddleX()
+    {
+        return rect.x + ( rect.w / 2 );
+    }
+    int Renderable::getMiddleY()
+    {
+        return rect.y + ( rect.h / 2 );
+    }
+    int Renderable::getHalfXLen()
+    {
+        return getMiddleX() - rect.x;
+    }
+
+    int Renderable::getHalfYLen()
+    {
+        return getMiddleY() - rect.y;
+    }
+
+    CollisionVector::CollisionVector(int x, int y)
+        : x(x), y(y)
+    {
     }
 }

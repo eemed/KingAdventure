@@ -9,13 +9,18 @@ namespace games
     {
         private:
             std::string name;
+            float velocityX;
+            float velocityY;
+            bool isJumping;
         public:
             Player(std::string name);
             void moveRight(const double &);
             void moveLeft(const double &);
             void jump(const double &);
-            void update(const std::vector< utils::Renderable > &, const int &, const double &);
-            bool checkCollide(const std::vector< utils::Renderable > &);
+            void update(std::vector< utils::Renderable > &, const double &);
+            //float checkHitGround(const std::vector< utils::Renderable > &);
+            float checkHitWall(SDL_Rect &, const std::vector< Renderable > & renderables);
+            utils::CollisionVector checkCollision( Renderable & );
     };
 }
 #endif
