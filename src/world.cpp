@@ -11,17 +11,22 @@ namespace games
         int xp = ( 1600 - 870 ) / 2;
         int yp = ( 900 - 210 ) / 2;
         int b = 30;
-        renderables.push_back( Renderable(0 * b + xp, 4 * b + yp,1 * b, 1 * b,"FOO"));
-        renderables.push_back( Renderable(0 * b + xp, 5 * b + yp,17 * b, 2 * b,"FOO"));
-        renderables.push_back( Renderable(4 * b + xp, 3 * b + yp,4 * b, 2 * b,"FOO"));
-        renderables.push_back( Renderable(9 * b + xp, 0 * b + yp,2 * b, 2 * b,"FOO"));
+        renderables.push_back( Renderable(0 * b + xp, 0 * b + yp,37 * b, 1 * b,"FOO"));
+        renderables.push_back( Renderable(0 * b + xp, 1 * b + yp,1 * b, 8 * b,"FOO"));
+        renderables.push_back( Renderable(36 * b + xp, 1 * b + yp,1 * b, 8 * b,"FOO"));
+        renderables.push_back( Renderable(1 * b + xp, 8 * b + yp,35 * b, 1 * b,"FOO"));
+        renderables.push_back( Renderable(2 * b + xp, 6 * b + yp,1 * b, 1 * b,"FOO"));
+        renderables.push_back( Renderable(2 * b + xp, 7 * b + yp,15 * b, 2 * b,"FOO"));
+        renderables.push_back( Renderable(6 * b + xp, 5 * b + yp,4 * b, 2 * b,"FOO"));
+        renderables.push_back( Renderable(11 * b + xp, 2 * b + yp,2 * b, 2 * b,"FOO"));
 
-        renderables.push_back( Renderable(12 * b + xp, 3 * b + yp,1 * b, 2 * b,"FOO"));
-        renderables.push_back( Renderable(13 * b + xp, 2 * b + yp,2 * b, 3 * b,"FOO"));
-        renderables.push_back( Renderable(15 * b + xp, 1 * b + yp,2 * b, 4 * b,"FOO"));
-        renderables.push_back( Renderable(28 * b + xp, 1 * b + yp,3 * b, 4 * b,"FOO"));
+        renderables.push_back( Renderable(14 * b + xp, 5 * b + yp,1 * b, 2 * b,"FOO"));
+        renderables.push_back( Renderable(15 * b + xp, 4 * b + yp,2 * b, 3 * b,"FOO"));
+        renderables.push_back( Renderable(17 * b + xp, 3 * b + yp,2 * b, 4 * b,"FOO"));
+        renderables.push_back( Renderable(28 * b + xp, 5 * b + yp,3 * b, 2 * b,"FOO"));
+        renderables.push_back( Renderable(30 * b + xp, 3 * b + yp,3 * b, 4 * b,"FOO"));
 
-        renderables.push_back( Renderable(28 * b + xp, 5 * b + yp,6 * b, 2 * b,"FOO"));
+        renderables.push_back( Renderable(30 * b + xp, 6 * b + yp,6 * b, 2 * b,"FOO"));
     }
 
     World::~World()
