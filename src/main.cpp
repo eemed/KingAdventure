@@ -18,7 +18,7 @@ int sizeX = 1600;
 int sizeY = 900;
 
 //Font path
-std::string fontPath = "/usr/share/fonts/truetype/roboto/hinted/Roboto-Bold.ttf";
+std::string fontPath = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf";
 
 // take away the 10 block sizes and the gaps +1 from screen width
 int xPadding = (sizeX - 10 * (40 + 1)) / 2;

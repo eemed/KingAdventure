@@ -19,9 +19,9 @@ namespace games
         renderables.push_back( Renderable(12 * b + xp, 3 * b + yp,1 * b, 2 * b,"FOO"));
         renderables.push_back( Renderable(13 * b + xp, 2 * b + yp,2 * b, 3 * b,"FOO"));
         renderables.push_back( Renderable(15 * b + xp, 1 * b + yp,2 * b, 4 * b,"FOO"));
-        renderables.push_back( Renderable(23 * b + xp, 1 * b + yp,3 * b, 4 * b,"FOO"));
+        renderables.push_back( Renderable(28 * b + xp, 1 * b + yp,3 * b, 4 * b,"FOO"));
 
-        renderables.push_back( Renderable(23 * b + xp, 5 * b + yp,6 * b, 2 * b,"FOO"));
+        renderables.push_back( Renderable(28 * b + xp, 5 * b + yp,6 * b, 2 * b,"FOO"));
     }
 
     World::~World()
@@ -79,10 +79,11 @@ namespace games
     {
         SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255 );
         SDL_RenderClear( renderer );
-        SDL_SetRenderDrawColor( renderer, 200, 200, 200, 255 );
 
+        SDL_SetRenderDrawColor( renderer, 255, 0, 0, 100 );
         SDL_RenderFillRect( renderer, &(player.getRect() ));
         // Iterate over the renderables
+        SDL_SetRenderDrawColor( renderer, 200, 200, 200, 255 );
         for(std::vector< Renderable >::size_type i = 0; i < renderables.size(); ++i)
         {
             SDL_RenderFillRect( renderer, &(renderables[i].getRect() ));
