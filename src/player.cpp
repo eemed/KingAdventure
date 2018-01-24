@@ -6,25 +6,35 @@ using namespace utils;
 namespace games
 {
     Player::Player(std::string name)
-        : Renderable(370,400,30,30,"Sprite"), name(name),
+        : Renderable(46,200,30,30,"Sprite"), name(name),
         velocityX(0), velocityY(0), isJumping(false)
     {
     }
 
+    void Player::speedRight(const double & deltaTime)
+    {
+        velocityX += 600 * deltaTime;
+    }
+
+    void Player::speedLeft(const double & deltaTime)
+    {
+        velocityX -= 600 * deltaTime;
+    }
+
     void Player::moveRight(const double & deltaTime)
     {
-        velocityX += 0.45 * deltaTime;
+        velocityX += 400 * deltaTime;
     }
 
     void Player::moveLeft(const double & deltaTime)
     {
-        velocityX -= 0.45 * deltaTime;
+        velocityX -= 400 * deltaTime;
     }
-
     void Player::update(std::vector< Renderable > & renderables, const double & deltaTime)
     {
         float friction = 0.5 * velocityX;
-        float gravity = 0.035 * deltaTime;
+        float gravity = 30 * deltaTime;
+        //printf("Gravity %f\n", gravity);
         velocityX -= friction;
         velocityY = MIN( velocityY + gravity, 9);
         if( abs( velocityX ) < 0.1 )
@@ -50,6 +60,7 @@ namespace games
             //Apply pos correction
             rect.x += colV.x;
             rect.y += colV.y;
+
         }
     }
 
@@ -59,9 +70,10 @@ namespace games
     {
         if( !isJumping )
         {
-            velocityY = 0;
+            if( delta == 1 )
+                velocityY = 0;
             isJumping = true;
-            velocityY -= 0.65 * delta;
+            velocityY = -10;
         }
     }
 
