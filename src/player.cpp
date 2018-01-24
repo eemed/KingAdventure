@@ -13,34 +13,20 @@ namespace games
 
     void Player::moveRight(const double & deltaTime)
     {
-        if( velocityX < 6 )
-        {
-            velocityX += 0.3 * deltaTime;
-        }
+        velocityX += 0.45 * deltaTime;
     }
 
     void Player::moveLeft(const double & deltaTime)
     {
-        if( velocityX > -6 )
-        {
-            velocityX -= 0.3 * deltaTime;
-        }
+        velocityX -= 0.45 * deltaTime;
     }
 
     void Player::update(std::vector< Renderable > & renderables, const double & deltaTime)
     {
         float friction = 0.5 * velocityX;
-        float gravity = 0.03 * deltaTime;
+        float gravity = 0.035 * deltaTime;
         velocityX -= friction;
-        std::cout << velocityX << ", " << velocityY << std::endl;
-        //if( velocityY > 2.5 * gravity )
-        //{
-        //    velocityY = 2.5 * gravity;
-        //}
-        //else
-        //{
-        //    velocityY += gravity;
-        //}
+        velocityY = MIN( velocityY + gravity, 9);
         if( abs( velocityX ) < 0.1 )
         {
             velocityX = 0;
@@ -50,15 +36,18 @@ namespace games
         for(std::vector< Renderable >::size_type i = 0; i < renderables.size(); ++i)
         {
             CollisionVector colV = checkCollision( renderables[i] );
+            //If collision vectorY is < 0 correction force up
             if( colV.y < 0 and colV.x == 0)
             {
                 velocityY = 0;
                 isJumping = false;
             }
-            else
+            //Hitting roof drop immediately
+            if( colV.y > 0 )
             {
-                velocityY = MIN( velocityY + gravity, 5);
+               velocityY = 0;
             }
+            //Apply pos correction
             rect.x += colV.x;
             rect.y += colV.y;
         }
@@ -70,8 +59,9 @@ namespace games
     {
         if( !isJumping )
         {
+            velocityY = 0;
             isJumping = true;
-            velocityY -= 2 * delta;
+            velocityY -= 0.65 * delta;
         }
     }
 
