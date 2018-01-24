@@ -8,9 +8,9 @@ namespace games
         //Testing
         //renderables.push_back( Renderable(0,0,100,50,"FOO"));
         //renderables.push_back( Renderable(0,800,1600,50,"FOO"));
-        int xp = ( 1600 - 870 ) / 2;
-        int yp = ( 900 - 210 ) / 2;
-        int b = 30;
+        int xp = 0;
+        int yp = 100;
+        int b = 40;
         renderables.push_back( Renderable(0 * b + xp, 0 * b + yp,37 * b, 1 * b,"FOO"));
         renderables.push_back( Renderable(0 * b + xp, 1 * b + yp,1 * b, 8 * b,"FOO"));
         renderables.push_back( Renderable(36 * b + xp, 1 * b + yp,1 * b, 8 * b,"FOO"));
@@ -36,13 +36,21 @@ namespace games
     void World::runGame()
     {
         const Uint8 * keys = SDL_GetKeyboardState(NULL);
-        Uint64 NOW = SDL_GetPerformanceCounter();
-        Uint64 LAST = 0;
-        double deltaTime = 0;
+
+        const double dt = 0.01;
+        int prevTime = 0;
+        int currentTime = SDL_GetTicks();
+        float deltaTime = 0;
+        double accumulator = 0;
+
         bool cont = true;
 
         while( cont )
         {
+            prevTime = currentTime;
+            currentTime = SDL_GetTicks();
+            deltaTime = (currentTime - prevTime) / 1000.0f;
+
             SDL_Event event;
             while( SDL_PollEvent( &event ) )
             {
@@ -50,24 +58,41 @@ namespace games
                 {
                     cont = false;
                 }
+                else if( event.type == SDL_KEYDOWN )
+                {
+                    switch( event.key.keysym.sym )
+                    {
+                        case SDLK_SPACE:
+                            player.jump(deltaTime);
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
 
-            LAST = NOW;
-            NOW = SDL_GetPerformanceCounter();
-            deltaTime = ((NOW - LAST)*1000 / (double)SDL_GetPerformanceFrequency() );
             // Update keys
             SDL_PumpEvents();
-            if( keys[SDL_SCANCODE_RIGHT] )
+            if( keys[SDL_SCANCODE_RIGHT] and keys[SDL_SCANCODE_LSHIFT])
+                player.speedRight(deltaTime);
+            else if( keys[SDL_SCANCODE_RIGHT] )
                 player.moveRight(deltaTime);
-            if( keys[SDL_SCANCODE_LEFT] )
+            if( keys[SDL_SCANCODE_LEFT] and keys[SDL_SCANCODE_LSHIFT])
+                player.speedLeft(deltaTime);
+            else if( keys[SDL_SCANCODE_LEFT] )
                 player.moveLeft(deltaTime);
-            if( keys[SDL_SCANCODE_SPACE] )
-                player.jump(deltaTime);
             if( keys[SDL_SCANCODE_Q] )
                 cont = false;
 
-            SDL_Delay( 8 );
-            update(deltaTime);
+
+            accumulator += deltaTime;
+
+            if( accumulator >= dt )
+            {
+                update( dt );
+                accumulator -= dt;
+            }
+
             render();
         }
     }
@@ -88,7 +113,7 @@ namespace games
         SDL_SetRenderDrawColor( renderer, 255, 0, 0, 100 );
         SDL_RenderFillRect( renderer, &(player.getRect() ));
         // Iterate over the renderables
-        SDL_SetRenderDrawColor( renderer, 200, 200, 200, 255 );
+        SDL_SetRenderDrawColor( renderer, 50, 50, 50, 255 );
         for(std::vector< Renderable >::size_type i = 0; i < renderables.size(); ++i)
         {
             SDL_RenderFillRect( renderer, &(renderables[i].getRect() ));

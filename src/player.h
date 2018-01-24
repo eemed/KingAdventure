@@ -16,6 +16,8 @@ namespace games
             Player(std::string name);
             void moveRight(const double &);
             void moveLeft(const double &);
+            void speedRight(const double &);
+            void speedLeft(const double &);
             void jump(const double &);
             void update(std::vector< utils::Renderable > &, const double &);
             //float checkHitGround(const std::vector< utils::Renderable > &);
