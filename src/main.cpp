@@ -99,7 +99,7 @@ void launch(int selected)
 {
     games::Tetris  *t = NULL;
     games::World * w = NULL;
-    //std::cout << selected << std::endl;
+    std::cout << selected << std::endl;
     switch( selected )
     {
         case 0:

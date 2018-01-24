@@ -1,6 +1,7 @@
 #include "player.h"
 #include <iostream>
 #include <cstdlib>
+#define MIN(a,b) ((a) < (b)) ? (a) : (b)
 using namespace utils;
 namespace games
 {
@@ -29,30 +30,35 @@ namespace games
     void Player::update(std::vector< Renderable > & renderables, const double & deltaTime)
     {
         float friction = 0.5 * velocityX;
-        float gravity = 0.25 * deltaTime;
+        float gravity = 0.03 * deltaTime;
         velocityX -= friction;
         std::cout << velocityX << ", " << velocityY << std::endl;
-        if( velocityY > gravity )
-        {
-            velocityY = gravity;
-        }
-        else
-        {
-            velocityY += gravity;
-        }
+        //if( velocityY > 2.5 * gravity )
+        //{
+        //    velocityY = 2.5 * gravity;
+        //}
+        //else
+        //{
+        //    velocityY += gravity;
+        //}
         if( abs( velocityX ) < 0.1 )
         {
             velocityX = 0;
         }
         rect.x += velocityX;
         rect.y += velocityY;
-        if( velocityY >= 0 )
-        {
-            isJumping = false;
-        }
         for(std::vector< Renderable >::size_type i = 0; i < renderables.size(); ++i)
         {
             CollisionVector colV = checkCollision( renderables[i] );
+            if( colV.y < 0 and colV.x == 0)
+            {
+                velocityY = 0;
+                isJumping = false;
+            }
+            else
+            {
+                velocityY = MIN( velocityY + gravity, 5);
+            }
             rect.x += colV.x;
             rect.y += colV.y;
         }
@@ -65,7 +71,7 @@ namespace games
         if( !isJumping )
         {
             isJumping = true;
-            velocityY -= 2.5 * delta;
+            velocityY -= 2 * delta;
         }
     }
 
