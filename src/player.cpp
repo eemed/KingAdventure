@@ -30,13 +30,13 @@ namespace games
     {
         velocityX -= 400 * deltaTime;
     }
-    void Player::update(std::vector< Renderable > & renderables, const double & deltaTime)
+    void Player::update(std::vector< Renderable > & renderables)
     {
-        float friction = 0.5 * velocityX;
-        float gravity = 30 * deltaTime;
+        float friction = 0.4 * velocityX;
+        float gravity = 0.5;
         //printf("Gravity %f\n", gravity);
         velocityX -= friction;
-        velocityY = MIN( velocityY + gravity, 9);
+        velocityY = MIN( velocityY + gravity, 12);
         if( abs( velocityX ) < 0.1 )
         {
             velocityX = 0;
@@ -73,7 +73,7 @@ namespace games
             if( delta == 1 )
                 velocityY = 0;
             isJumping = true;
-            velocityY = -10;
+            velocityY = -15;
         }
     }
 

@@ -19,7 +19,7 @@ namespace games
             void speedRight(const double &);
             void speedLeft(const double &);
             void jump(const double &);
-            void update(std::vector< utils::Renderable > &, const double &);
+            void update(std::vector< utils::Renderable > &);
             //float checkHitGround(const std::vector< utils::Renderable > &);
             float checkHitWall(SDL_Rect &, const std::vector< Renderable > & renderables);
             utils::CollisionVector checkCollision( Renderable & );

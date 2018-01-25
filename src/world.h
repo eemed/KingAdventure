@@ -23,7 +23,7 @@ namespace games
             ~World();
             void render();
             void runGame();
-            void update(const double & deltaTime);
+            void update();
     };
 }
 #endif

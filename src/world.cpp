@@ -89,7 +89,7 @@ namespace games
 
             if( accumulator >= dt )
             {
-                update( dt );
+                update();
                 accumulator -= dt;
             }
 
@@ -97,12 +97,12 @@ namespace games
         }
     }
 
-    void World::update(const double & deltaTime)
+    void World::update()
     {
         //Loop throuh all renderables and update them
         //
         //
-        player.update(renderables, deltaTime);
+        player.update(renderables);
     }
 
     void World::render()
