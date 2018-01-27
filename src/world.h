@@ -1,29 +1,41 @@
-#ifndef _WORLD
+#ifndef _WORLD_
 #define _WORLD_
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+
 #include <string>
-#include "utils.h"
+
 #include "player.h"
-namespace games
+#include "render_context.h"
+
+namespace sdl_platformer
 {
-    // Represents the world
-    class World
-    {
-        private:
-            SDL_Renderer * renderer;
-            TTF_Font * fnt;
-            std::vector< utils::Renderable > renderables;
-            std::vector< utils::Renderable > wholeWorld;
-            int posX;
-            int posY;
-            Player player;
-        public:
-            World(SDL_Renderer *, TTF_Font *, Player);
-            ~World();
-            void render();
-            void runGame();
-            void update();
-    };
+   class World
+   {
+      private:
+
+         static World * _current;
+
+         RenderContext m_render_context;
+         Player m_player;
+         float m_friction_modifier;
+
+      public:
+
+         World(std::string filename);
+         ~World();
+
+         //Moves render context to center player
+         //void center_player();
+
+         Player & get_player();
+
+         static World * current();
+         void activate();
+         void deactivate();
+
+         void update();
+
+         float get_friction_modifier() const;
+         RenderContext * get_render_context();
+   };
 }
-#endif
+#endif //_WORLD_

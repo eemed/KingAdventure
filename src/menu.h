@@ -1,46 +1,52 @@
+#ifndef _MENU_
+#define _MENU_
+
 #include <vector>
 #include <string>
-#include <iostream>
-#include <utility>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-#include "game.h"
-namespace sdl_games
+
+#include "color.h"
+
+namespace sdl_platformer
 {
-    class Menu
-    {
-        private:
-            unsigned int selected; // Index of currently selected
-            std::vector< std::string > games; // Vector of all the options
-            unsigned int size_m;
-            TTF_Font * fnt;
-            SDL_Color textColor;
-            SDL_Color backgroundColor;
-            SDL_Color selectedColor;
-            std::vector< std::pair<SDL_Texture *, SDL_Rect> > textures;
-            int x;
-            int y;
-            SDL_Renderer * renderer;
-        public:
-            Menu(TTF_Font *, SDL_Renderer *);
+   class Menu
+   {
+      protected:
 
-            ~Menu();
-            void up();
-            void down();
-            void press();
-            bool add( std::string); // add to end
-            bool add( std::string, unsigned int i); // add to index i
+         unsigned int m_selected;
+         std::vector< std::string > m_menu_items;
+         Color m_text_color;
+         Color m_selected_color;
+         Color m_background_color;
 
-            bool del(std::string); // Delete this menu entry
-            bool del(unsigned int i); //delete entry in this index
-            bool del(); // Delete currently selected
+         void create_textures(std::vector< std::string > text_items);
 
-            unsigned int getSelected() const;
-            unsigned int size() const;
-            bool updateTextures();
-            void render() const;
+         static Menu * _current;
 
-            friend std::ostream & operator<<(std::ostream & out, const Menu & menu);
-    };
-    std::ostream & operator<<(std::ostream & out, const Menu & menu);
-}
+      public:
+
+         Menu( std::vector< std::string > menu_items);
+         ~Menu();
+
+         unsigned int select() const;
+
+         void move_up();
+         void move_down();
+
+         void draw() const;
+
+         void set_background_color( Color );
+         void set_selected_color( Color );
+         void set_text_color( Color );
+
+         Color get_background_color( Color ) const;
+         Color get_selected_color( Color ) const;
+         Color get_text_color( Color ) const;
+
+         static Menu * current();
+
+         void activate();
+         void deactivate();
+   };
+} // sdl_platformer
+#endif //_MENU_

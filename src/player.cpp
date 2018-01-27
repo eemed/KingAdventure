@@ -1,120 +1,93 @@
-#include "player.h"
 #include <iostream>
-#include <cstdlib>
-#define MIN(a,b) ((a) < (b)) ? (a) : (b)
-using namespace utils;
-namespace games
+
+#include "player.h"
+#include "collision.h"
+#include "world.h"
+
+namespace sdl_platformer
 {
-    Player::Player(std::string name)
-        : Renderable(46,200,30,30,"Sprite"), name(name),
-        velocityX(0), velocityY(0), isJumping(false)
-    {
-    }
+   Player::Player(int x, int y, int width, int height,
+         Color col, std::string name)
+      : m_hitbox(Rectangle(x, y, width, height, col)),
+        m_physics( Physics()),
+        m_name( name ),
+        m_on_ground(true),
+        m_jump_state( NOT_JUMPING )
+   {
+   }
 
-    void Player::speedRight(const double & deltaTime)
-    {
-        velocityX += 600 * deltaTime;
-    }
+   std::string
+   Player::get_name() const { return m_name; }
 
-    void Player::speedLeft(const double & deltaTime)
-    {
-        velocityX -= 600 * deltaTime;
-    }
+   bool
+   Player::hits_ground() const { return m_on_ground; }
 
-    void Player::moveRight(const double & deltaTime)
-    {
-        velocityX += 400 * deltaTime;
-    }
+   jump_state
+   Player::get_jump_state() const { return m_jump_state; }
 
-    void Player::moveLeft(const double & deltaTime)
-    {
-        velocityX -= 400 * deltaTime;
-    }
-    void Player::update(std::vector< Renderable > & renderables)
-    {
-        float friction = 0.4 * velocityX;
-        float gravity = 0.5;
-        //printf("Gravity %f\n", gravity);
-        velocityX -= friction;
-        velocityY = MIN( velocityY + gravity, 12);
-        if( abs( velocityX ) < 0.1 )
-        {
-            velocityX = 0;
-        }
-        rect.x += velocityX;
-        rect.y += velocityY;
-        for(std::vector< Renderable >::size_type i = 0; i < renderables.size(); ++i)
-        {
-            CollisionVector colV = checkCollision( renderables[i] );
-            //If collision vectorY is < 0 correction force up
-            if( colV.y < 0 and colV.x == 0)
-            {
-                velocityY = 0;
-                isJumping = false;
-            }
-            //Hitting roof drop immediately
-            if( colV.y > 0 )
-            {
-               velocityY = 0;
-            }
-            //Apply pos correction
-            rect.x += colV.x;
-            rect.y += colV.y;
+   void
+   Player::update()
+   {
+      m_physics.update();
+      m_hitbox.set_x( m_hitbox.get_x() + m_physics.get_velocity_x() );
+      m_hitbox.set_y( m_hitbox.get_y() + m_physics.get_velocity_y() );
+      collides();
+   }
 
-        }
-    }
+   void
+   Player::hits_ground(bool n_hits) { m_on_ground = n_hits; }
 
-    //float Player::checkHitGround(const std::vector< Renderable > & renderables)
+   void
+   Player::collides()
+   {
+      //Replace this with something that searches nearby
+      //collidables. Now uses worlds rendecontext.
+      World * cur = World::current();
+      bool is_hit = false;
+      m_hitbox.set_y( m_hitbox.get_y() + 1);
+      for( auto & elem : cur->get_render_context()->m_squares )
+      {
+         CollisionVector cv = rect_collides_with_rect( m_hitbox, elem );
+         if( cv.m_hit )
+         {
+            is_hit = true;
+         }
+         m_hitbox.set_x( m_hitbox.get_x() + cv.m_x );
+         m_hitbox.set_y( m_hitbox.get_y() + cv.m_y );
+      }
+      if( !is_hit )
+      {
+         hits_ground(false);
+      }
+      else
+      {
+         hits_ground(true);
+         m_physics.set_velocity_y(0.0f);
+      }
+   }
 
-    void Player::jump(const double & delta)
-    {
-        if( !isJumping )
-        {
-            if( delta == 1 )
-                velocityY = 0;
-            isJumping = true;
-            velocityY = -15;
-        }
-    }
+   void
+   Player::move_right(const float & elapsed_time)
+   {
+      m_physics.move_right(elapsed_time);
+   }
 
-    //float Player::checkHitWall( SDL_Rect & r, const std::vector< Renderable > & renderables)
+   void
+   Player::move_left(const float & elapsed_time)
+   {
+      m_physics.move_left(elapsed_time);
+   }
 
-    CollisionVector Player::checkCollision( Renderable & r)
-    {
-        if( r.getYHigh() < getYLow() and r.getYLow() > getYHigh() )
-        {
-            if( r.getXHigh() > getXLow() and r.getXLow() < getXHigh() )
-            {
-                //Crossing
-                int dirX = ( getMiddleX() - r.getMiddleX() );
-                int dirY = ( getMiddleY() - r.getMiddleY() );
+   void
+   Player::jump()
+   {
+      if( hits_ground() )
+         m_physics.jump();
+   }
 
-                int dx = getHalfXLen() + r.getHalfXLen() - ( abs(dirX) );
-                int dy = getHalfYLen() + r.getHalfYLen() - ( abs(dirY) );
-                if( abs(dx) < abs(dy) )
-                {
-                    if( dirX > 0 )
-                    {
-                        return CollisionVector(dx, 0);
-                    }
-                    else
-                    {
-                        return CollisionVector(-dx, 0);
-                    }
-                }
-                else
-                {
-                    if( dirY > 0 )
-                    {
-                        return CollisionVector(0, dy);
-                    }
-                    else
-                    {
-                        return CollisionVector(0, -dy);
-                    }
-                }
-            }
-        }
-        return CollisionVector(0,0);
-    }
-}
+   void
+   Player::draw() const
+   {
+      m_hitbox.draw();
+   }
+}// sdl_platformer
