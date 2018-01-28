@@ -10,8 +10,8 @@ namespace sdl_platformer
    {
       if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
       {
-          std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
-          return false;
+         std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
+         return false;
       }
       return true;
    }
@@ -37,52 +37,47 @@ namespace sdl_platformer
    Game::run()
    {
       const double dt = 0.01;
-      int prevTime = 0;
-      int currentTime = SDL_GetTicks();
-      float deltaTime = 0;
+      int prev_time = 0;
+      int current_time = SDL_GetTicks();
+      float delta_time = 0;
       double accumulator = 0;
       while( m_running )
       {
-          prevTime = currentTime;
-          currentTime = SDL_GetTicks();
-          deltaTime = (currentTime - prevTime) / 1000.0f;
+         prev_time = current_time;
+         current_time = SDL_GetTicks();
+         delta_time = (current_time - prev_time) / 1000.0f;
 
-          //Process input
-          m_input.process_events(dt);
+         //Process input
+         m_input.process_events(delta_time);
 
-          accumulator += deltaTime;
+         accumulator += delta_time;
 
-          bool updated = false;
+         bool updated = false;
 
-          if( accumulator >= dt )
-          {
-             //update logic
-             m_world.update(dt);
-             accumulator -= dt;
-             updated = true;
-          }
+         while( accumulator >= dt )
+         {
+            //update logic
+            m_world.update(dt);
+            accumulator -= dt;
+            updated = true;
+         }
 
-          if( updated )
-          {
-             //Draw world to current screen
-             m_screen.draw( *m_world.get_render_context() );
-          }
+         if( updated )
+         {
+            //Draw world to current screen
+            m_screen.draw( *m_world.get_render_context() );
+         }
+         else
+         {
+            SDL_Delay(1);
+         }
       }
    }
 
    void
-   Game::terminate()
-   {
-      m_running = false;
-      //delete stuff
-   }
-
-   //Game *
-   //Game::current() { return _current; }
-
-   //void
-   //Game::activate() { _current = this; }
-
-   //void
-   //Game::deactivate() { _current = NULL; }
+      Game::terminate()
+      {
+         m_running = false;
+         //delete stuff
+      }
 } //sdl_platformer
