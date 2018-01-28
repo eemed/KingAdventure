@@ -38,12 +38,17 @@ namespace sdl_platformer
          jump_state get_jump_state() const;
 
          void update(float elapsed_time);
+         void set_jump_state();
 
          void move_right(float elapsed_time);
          void move_left(float elapsed_time);
+
+         void speed_right(float elapsed_time);
+         void speed_left(float elapsed_time);
+
          void jump();
 
-         void collides();
+         void fix_collision();
          void draw() const;
    };
 } // namespace sdl_platformer

@@ -10,8 +10,9 @@ namespace sdl_platformer
 {
    Physics::Physics()
       : m_velocity_x(0), m_velocity_y(0),
-        m_acceleration_x(70), m_acceleration_y(1),
-        m_gravity_enabled(true), m_gravity_modifier( 0.2f )
+        m_acceleration_x(50), m_acceleration_y(1),
+        m_gravity_enabled(true), m_gravity_modifier( 0.2f ),
+        m_speed_limit(8)
    {
    }
 
@@ -78,12 +79,28 @@ namespace sdl_platformer
    Physics::move_left(float elapsed_time)
    {
       m_velocity_x += -(elapsed_time * m_acceleration_x);
+      m_speed_limit = 6;
    }
 
    void
    Physics::move_right(float elapsed_time)
    {
       m_velocity_x += elapsed_time * m_acceleration_x;
+      m_speed_limit = 6;
+   }
+
+   void
+   Physics::speed_left(float elapsed_time)
+   {
+      m_velocity_x += -(elapsed_time * m_acceleration_x);
+      m_speed_limit = 10;
+   }
+
+   void
+   Physics::speed_right(float elapsed_time)
+   {
+      m_velocity_x += elapsed_time * m_acceleration_x;
+      m_speed_limit = 10;
    }
 
    void
@@ -100,13 +117,13 @@ namespace sdl_platformer
       {
          m_velocity_x = 0;
       }
-      if( m_velocity_x > 6.0f )
+      if( m_velocity_x > m_speed_limit )
       {
-         m_velocity_x = 6;
+         m_velocity_x = m_speed_limit;
       }
-      else if( m_velocity_x < -6.0f )
+      else if( m_velocity_x < -m_speed_limit )
       {
-         m_velocity_x = -6;
+         m_velocity_x = -m_speed_limit;
       }
 
       //apply friction

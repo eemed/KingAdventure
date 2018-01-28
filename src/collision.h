@@ -12,7 +12,7 @@ namespace sdl_platformer
     * to avoid collision. In air functions try not to correct upwards
     * if possible
     */
-   CollisionVector rect_collides_with_rect( const Rectangle &, const Rectangle &);
+   CollisionVector rect_collides_with_rect( const Rectangle &, const Rectangle &, int padding);
 
    CollisionVector rect_collides_with_rect_in_air( const Rectangle &, const Rectangle &);
 

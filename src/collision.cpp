@@ -1,11 +1,13 @@
 #include <cstdlib>
+#include <iostream>
 
 #include "collision.h"
+#include "world.h"
 
 namespace sdl_platformer
 {
    CollisionVector
-   rect_collides_with_rect( const Rectangle & a, const Rectangle & b)
+   rect_collides_with_rect( const Rectangle & a, const Rectangle & b, int padding)
    {
       CollisionHit info;
       if( b.get_y_high() < a.get_y_low() and b.get_y_low() > a.get_y_high() )
@@ -18,7 +20,14 @@ namespace sdl_platformer
 
             int dx = a.get_half_x_len() + b.get_half_x_len() - ( abs(dirX) );
             int dy = a.get_half_y_len() + b.get_half_y_len() - ( abs(dirY) );
-            if( abs(dx) < abs(dy) )
+            /*
+             * This padding removes the problem if you
+             * try to jump on a platform and it would
+             * correct position on top of that platform
+             * now correction prefers x axis corrections
+             * over y
+             */
+            if( abs(dx) < abs(dy) + padding)
             {
                if( dirX > 0 )
                {
@@ -52,12 +61,6 @@ namespace sdl_platformer
 
    CollisionVector
    rect_collides_with_circle( const Rectangle &, const Circle &)
-   {
-      CollisionHit info;
-      return CollisionVector(0, 0, info);
-   }
-
-   CollisionVector rect_collides_with_circle_in_air( const Rectangle &, const Circle &)
    {
       CollisionHit info;
       return CollisionVector(0, 0, info);
