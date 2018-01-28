@@ -10,8 +10,8 @@ namespace sdl_platformer
 {
    Physics::Physics()
       : m_velocity_x(0), m_velocity_y(0),
-        m_acceleration_x(0.1), m_acceleration_y(1),
-        m_gravity_enabled(true), m_gravity_modifier( 50.0f )
+        m_acceleration_x(70), m_acceleration_y(1),
+        m_gravity_enabled(true), m_gravity_modifier( 0.2f )
    {
    }
 
@@ -77,27 +77,26 @@ namespace sdl_platformer
    void
    Physics::move_left(float elapsed_time)
    {
-       m_velocity_x += -(elapsed_time * m_acceleration_x);
+      m_velocity_x += -(elapsed_time * m_acceleration_x);
    }
 
    void
    Physics::move_right(float elapsed_time)
    {
-       m_velocity_x += elapsed_time * m_acceleration_x;
+      m_velocity_x += elapsed_time * m_acceleration_x;
    }
 
    void
    Physics::jump()
    {
-      m_velocity_y -= m_acceleration_y * 10;
+      m_velocity_y -= m_acceleration_y * 8;
    }
 
    void
    Physics::update(float elapsed_time)
    {
       World * cur = World::current();
-      m_velocity_x -= m_velocity_x * cur->get_friction_modifier() * m_acceleration_x * elapsed_time;
-      if( abs(m_velocity_x) < 0.01f )
+      if( abs(m_velocity_x) < 0.1f )
       {
          m_velocity_x = 0;
       }
@@ -105,15 +104,22 @@ namespace sdl_platformer
       {
          m_velocity_x = 6;
       }
-      if( m_velocity_x < -6.0f )
+      else if( m_velocity_x < -6.0f )
       {
          m_velocity_x = -6;
       }
-      //std::cout << m_velocity_x << std::endl;
-      //m_velocity_x += m_acceleration_x * elapsed_time;
+
+      //apply friction
+      m_velocity_x -= m_velocity_x * cur->get_friction_modifier();
+
+      //apply gravity if needed
       if( m_gravity_enabled and !cur->get_player().hits_ground())
       {
-         m_velocity_y += (m_gravity_modifier + m_acceleration_y) * elapsed_time;
+         m_velocity_y += m_gravity_modifier * m_acceleration_y;
+      }
+      if(elapsed_time > 100 )
+      {
+         m_velocity_x = 0;
       }
    }
 

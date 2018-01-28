@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 #include "player.h"
 #include "collision.h"
@@ -30,9 +31,21 @@ namespace sdl_platformer
    Player::update(float elapsed_time)
    {
       m_physics.update(elapsed_time);
-      m_hitbox.set_y( m_hitbox.get_y() + m_physics.get_velocity_y() );
-      m_hitbox.set_x( m_hitbox.get_x() + m_physics.get_velocity_x() );
+
+      float new_x = m_hitbox.get_x() + m_physics.get_velocity_x();
+      float new_y = m_hitbox.get_y() + m_physics.get_velocity_y();
+
+      if( m_physics.get_velocity_x() < 0 )
+      {
+         m_hitbox.set_x( ceil(new_x) );
+      }
+      else // >= 0
+      {
+         m_hitbox.set_x( floor(new_x) );
+      }
+      m_hitbox.set_y( new_y );
       collides();
+      //std::cout << "Hbox: " << m_hitbox.get_x() << ", " << m_hitbox.get_y() << "\n";
    }
 
    void
