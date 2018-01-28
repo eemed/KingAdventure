@@ -15,6 +15,7 @@ namespace sdl_platformer
 
          bool m_gravity_enabled;
          float m_gravity_modifier;
+         float m_speed_limit;
 
       public:
          Physics();
@@ -42,6 +43,10 @@ namespace sdl_platformer
 
          void move_left(float elapsed_time);
          void move_right(float elapsed_time);
+
+         void speed_left(float elapsed_time);
+         void speed_right(float elapsed_time);
+
          void jump();
          void update(float elapsed_time);
    };

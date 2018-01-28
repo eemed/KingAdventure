@@ -65,11 +65,11 @@ namespace sdl_platformer
    InputHandler::process_player_events(const float & elapsed_time)
    {
       if( m_keyboard[SDL_SCANCODE_RIGHT] and m_keyboard[SDL_SCANCODE_LSHIFT])
-         World::current()->get_player().move_right(elapsed_time);
+         World::current()->get_player().speed_right(elapsed_time);
       else if( m_keyboard[SDL_SCANCODE_RIGHT] )
          World::current()->get_player().move_right(elapsed_time);
       if( m_keyboard[SDL_SCANCODE_LEFT] and m_keyboard[SDL_SCANCODE_LSHIFT])
-         World::current()->get_player().move_left(elapsed_time);
+         World::current()->get_player().speed_left(elapsed_time);
       else if( m_keyboard[SDL_SCANCODE_LEFT] )
          World::current()->get_player().move_left(elapsed_time);
       if( m_keyboard[SDL_SCANCODE_Q] )
