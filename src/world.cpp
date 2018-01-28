@@ -2,13 +2,12 @@
 
 namespace sdl_platformer
 {
-
-   World * World::_current = NULL;
+   //World * World::_current = 0;
 
    World::World(std::string filename)
       : m_render_context( RenderContext(filename) ),
         m_player( Player(35, 35, 30, 30, Color(255, 0, 0, 255), "Jonne") ),
-        m_friction_modifier(0.5f)
+        m_friction_modifier(300.0f)
    {
       activate();
    }
@@ -20,22 +19,22 @@ namespace sdl_platformer
    }
 
    void
-   World::update()
+   World::update(float elapsed_time)
    {
-      m_player.update();
+      m_player.update(elapsed_time);
    }
 
    Player &
    World::get_player() { return m_player; }
 
-   World *
-   World::current() { return _current; }
+   //World *
+   //World::current() { return _current; }
 
-   void
-   World::activate() { _current = this; }
+   //void
+   //World::activate() { _current = this; }
 
-   void
-   World::deactivate() { _current = NULL; }
+   //void
+   //World::deactivate() { _current = NULL; }
 
    float
    World::get_friction_modifier() const { return m_friction_modifier; }

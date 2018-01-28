@@ -1,15 +1,17 @@
 #include <iostream>
+#include <cstdlib>
 
 #include "physics.h"
 #include "world.h"
 #include "collision.h"
+#include "current.h"
 
 namespace sdl_platformer
 {
    Physics::Physics()
       : m_velocity_x(0), m_velocity_y(0),
         m_acceleration_x(0.1), m_acceleration_y(1),
-        m_gravity_enabled(true), m_gravity_modifier( 0.5f )
+        m_gravity_enabled(true), m_gravity_modifier( 50.0f )
    {
    }
 
@@ -73,31 +75,45 @@ namespace sdl_platformer
    Physics::get_gravity_modifier() const { return m_gravity_modifier; }
 
    void
-   Physics::move_left(const float & elapsed_time)
+   Physics::move_left(float elapsed_time)
    {
-       m_velocity_x -= elapsed_time  * m_acceleration_x;
+       m_velocity_x += -(elapsed_time * m_acceleration_x);
    }
 
    void
-   Physics::move_right( const float & elapsed_time)
+   Physics::move_right(float elapsed_time)
    {
-       m_velocity_x += elapsed_time  * m_acceleration_x;
+       m_velocity_x += elapsed_time * m_acceleration_x;
    }
 
    void
    Physics::jump()
    {
-      m_velocity_y -= 10;
+      m_velocity_y -= m_acceleration_y * 10;
    }
 
    void
-   Physics::update()
+   Physics::update(float elapsed_time)
    {
       World * cur = World::current();
-      m_velocity_x -= cur->get_friction_modifier() * m_velocity_x;
+      m_velocity_x -= m_velocity_x * cur->get_friction_modifier() * m_acceleration_x * elapsed_time;
+      if( abs(m_velocity_x) < 0.01f )
+      {
+         m_velocity_x = 0;
+      }
+      if( m_velocity_x > 6.0f )
+      {
+         m_velocity_x = 6;
+      }
+      if( m_velocity_x < -6.0f )
+      {
+         m_velocity_x = -6;
+      }
+      //std::cout << m_velocity_x << std::endl;
+      //m_velocity_x += m_acceleration_x * elapsed_time;
       if( m_gravity_enabled and !cur->get_player().hits_ground())
       {
-         m_velocity_y += m_gravity_modifier * m_acceleration_y;
+         m_velocity_y += (m_gravity_modifier + m_acceleration_y) * elapsed_time;
       }
    }
 

@@ -37,10 +37,10 @@ namespace sdl_platformer
          void hits_ground(bool n_hit);
          jump_state get_jump_state() const;
 
-         void update();
+         void update(float elapsed_time);
 
-         void move_right(const float & elapsed_time);
-         void move_left(const float & elapsed_time);
+         void move_right(float elapsed_time);
+         void move_left(float elapsed_time);
          void jump();
 
          void collides();

@@ -15,7 +15,8 @@ namespace sdl_platformer
       }
       return true;
    }
-   Game * Game::_current = NULL;
+
+   //Game * Game::_current = NULL;
 
    Game::Game( std::string world_txt )
       : m_screen( Screen() ),
@@ -56,7 +57,7 @@ namespace sdl_platformer
           if( accumulator >= dt )
           {
              //update logic
-             m_world.update();
+             m_world.update(dt);
              accumulator -= dt;
              updated = true;
           }
@@ -76,12 +77,12 @@ namespace sdl_platformer
       //delete stuff
    }
 
-   Game *
-   Game::current() { return _current; }
+   //Game *
+   //Game::current() { return _current; }
 
-   void
-   Game::activate() { _current = this; }
+   //void
+   //Game::activate() { _current = this; }
 
-   void
-   Game::deactivate() { _current = NULL; }
+   //void
+   //Game::deactivate() { _current = NULL; }
 } //sdl_platformer
