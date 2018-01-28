@@ -2,6 +2,7 @@
 
 #include "rectangle.h"
 #include "screen.h"
+#include "current.h"
 
 namespace sdl_platformer
 {

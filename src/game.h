@@ -7,20 +7,18 @@
 #include "screen.h"
 #include "menu.h"
 #include "input_handler.h"
+#include "current.h"
 
 namespace sdl_platformer
 {
-   class Game
+   class Game : public Current<Game>
    {
       private:
-
          Screen m_screen;
          Menu m_menu;
          World m_world;
          InputHandler m_input;
          bool m_running;
-
-         static Game * _current;
 
       public:
          Game(std::string filename);
@@ -29,10 +27,8 @@ namespace sdl_platformer
          void run();
          void terminate();
 
-         static Game * current();
-
-         void activate();
-         void deactivate();
+         //void activate();
+         //void deactivate();
    };
 } // sdl_platformer
 #endif // _GAME_

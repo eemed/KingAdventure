@@ -3,6 +3,7 @@
 #include "player.h"
 #include "collision.h"
 #include "world.h"
+#include "current.h"
 
 namespace sdl_platformer
 {
@@ -26,11 +27,11 @@ namespace sdl_platformer
    Player::get_jump_state() const { return m_jump_state; }
 
    void
-   Player::update()
+   Player::update(float elapsed_time)
    {
-      m_physics.update();
-      m_hitbox.set_x( m_hitbox.get_x() + m_physics.get_velocity_x() );
+      m_physics.update(elapsed_time);
       m_hitbox.set_y( m_hitbox.get_y() + m_physics.get_velocity_y() );
+      m_hitbox.set_x( m_hitbox.get_x() + m_physics.get_velocity_x() );
       collides();
    }
 
@@ -52,8 +53,8 @@ namespace sdl_platformer
          {
             is_hit = true;
          }
-         m_hitbox.set_x( m_hitbox.get_x() + cv.m_x );
          m_hitbox.set_y( m_hitbox.get_y() + cv.m_y );
+         m_hitbox.set_x( m_hitbox.get_x() + cv.m_x );
       }
       if( !is_hit )
       {
@@ -67,13 +68,13 @@ namespace sdl_platformer
    }
 
    void
-   Player::move_right(const float & elapsed_time)
+   Player::move_right(float elapsed_time)
    {
       m_physics.move_right(elapsed_time);
    }
 
    void
-   Player::move_left(const float & elapsed_time)
+   Player::move_left(float elapsed_time)
    {
       m_physics.move_left(elapsed_time);
    }

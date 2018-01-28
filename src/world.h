@@ -5,21 +5,19 @@
 
 #include "player.h"
 #include "render_context.h"
+#include "current.h"
 
 namespace sdl_platformer
 {
-   class World
+   class World : public Current<World>
+
    {
       private:
-
-         static World * _current;
-
          RenderContext m_render_context;
          Player m_player;
          float m_friction_modifier;
 
       public:
-
          World(std::string filename);
          ~World();
 
@@ -28,11 +26,7 @@ namespace sdl_platformer
 
          Player & get_player();
 
-         static World * current();
-         void activate();
-         void deactivate();
-
-         void update();
+         void update(float elapsed_time);
 
          float get_friction_modifier() const;
          RenderContext * get_render_context();

@@ -39,18 +39,19 @@ namespace sdl_platformer
         return renderer;
    }
 
-   Screen * Screen::m_current = NULL;
+   //Screen * Screen::m_current = NULL;
 
    Screen::Screen(int x, int y, int width, int height)
       : m_window( create_window(x, y, width, height) ),
         m_renderer( create_renderer( m_window ) )
    {
       setup_renderer(m_renderer, width, height);
-      m_current = this;
+      activate();
    }
 
    Screen::~Screen()
    {
+      deactivate();
       //Destroy everything
    }
 
@@ -66,14 +67,14 @@ namespace sdl_platformer
       SDL_RenderPresent( m_renderer );
    }
 
-   Screen *
-   Screen::current() { return m_current; }
+   //Screen *
+   //Screen::current() { return m_current; }
 
-   void
-   Screen::select()
-   {
-      m_current = this;
-   }
+   //void
+   //Screen::select()
+   //{
+   //   m_current = this;
+   //}
 
    SDL_Renderer *
    Screen::get_renderer()

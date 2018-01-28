@@ -40,10 +40,10 @@ namespace sdl_platformer
          void set_gravity_modifier(float new_modifier);
          float get_gravity_modifier() const;
 
-         void move_left(const float & elapsed_time);
-         void move_right(const float & elapsed_time);
+         void move_left(float elapsed_time);
+         void move_right(float elapsed_time);
          void jump();
-         void update();
+         void update(float elapsed_time);
    };
 } // namespace sdl_platformer
 #endif //_PHYSICS_

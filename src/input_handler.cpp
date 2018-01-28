@@ -7,7 +7,7 @@
 
 namespace sdl_platformer
 {
-   InputHandler * InputHandler::_current = NULL;
+   //InputHandler * InputHandler::_current = NULL;
 
    InputHandler::InputHandler()
       : m_keyboard( SDL_GetKeyboardState(NULL) )
@@ -134,12 +134,12 @@ namespace sdl_platformer
       }
    }
 
-   void
-   InputHandler::activate() { _current = this; }
+   //void
+   //InputHandler::activate() { _current = this; }
 
-   void
-   InputHandler::deactivate() { _current = NULL; }
+   //void
+   //InputHandler::deactivate() { _current = NULL; }
 
-   InputHandler *
-   InputHandler::current() { return _current; }
+   //InputHandler *
+   //InputHandler::current() { return _current; }
 } // sdl_platformer
