@@ -25,6 +25,7 @@ namespace sdl_platformer
 
          bool m_on_ground;
          jump_state m_jump_state;
+         bool m_fly_mode;
 
       public:
 
@@ -43,8 +44,12 @@ namespace sdl_platformer
          void move_right(float elapsed_time);
          void move_left(float elapsed_time);
 
+         void move_up(float elapsed_time);
+         void move_down(float elapsed_time);
+
          void speed_right(float elapsed_time);
          void speed_left(float elapsed_time);
+         void toggle_gravity();
 
          void jump();
 

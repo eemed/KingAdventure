@@ -12,7 +12,7 @@ namespace sdl_platformer
       : m_velocity_x(0), m_velocity_y(0),
         m_acceleration_x(1.30), m_acceleration_y(1),
         m_gravity_enabled(true), m_gravity_modifier( 0.2f ),
-        m_speed_limit(4)
+        m_speed_limit(4), m_lock(false)
    {
    }
 
@@ -60,7 +60,10 @@ namespace sdl_platformer
    void
    Physics::set_gravity_enabled(bool gravity_enabled)
    {
-      m_gravity_enabled = gravity_enabled;
+      if( !m_lock )
+      {
+         m_gravity_enabled = gravity_enabled;
+      }
    }
 
    bool
@@ -101,6 +104,31 @@ namespace sdl_platformer
       }
    }
 
+   void
+   Physics::move_up(float elapsed_time)
+   {
+      if( m_velocity_y > -1 )
+      {
+         m_velocity_y -= 30 * m_acceleration_x * elapsed_time;
+      }
+      else
+      {
+         m_velocity_y *= 10 * elapsed_time * m_acceleration_x + 1;
+      }
+   }
+
+   void
+   Physics::move_down(float elapsed_time)
+   {
+      if( m_velocity_y < 1 )
+      {
+         m_velocity_y += 30 *m_acceleration_x * elapsed_time;
+      }
+      else
+      {
+         m_velocity_y *= 10 * elapsed_time * m_acceleration_x + 1;
+      }
+   }
    void
    Physics::speed_left(float elapsed_time)
    {
@@ -150,19 +178,47 @@ namespace sdl_platformer
          m_velocity_x = -m_speed_limit;
       }
 
+      if( m_lock )
+      {
+         if( m_velocity_y > m_speed_limit )
+         {
+            m_velocity_y = m_speed_limit;
+         }
+         else if( m_velocity_y < -m_speed_limit )
+         {
+            m_velocity_y = -m_speed_limit;
+         }
+      }
+
       //apply friction
       m_velocity_x *= cur->get_friction_modifier();
-      std::cout << m_velocity_x << "\n";
+      //std::cout << m_velocity_x << "\n";
 
       //apply gravity if needed
       if( m_gravity_enabled )
       {
          m_velocity_y += m_gravity_modifier * m_acceleration_y;
       }
+      else if( m_lock ) // means user in fly mode
+      {
+         m_velocity_y *= cur->get_friction_modifier();
+      }
       if(elapsed_time > 100 )
       {
          m_velocity_x = 0;
       }
+   }
+
+   void
+   Physics::lock_gravity()
+   {
+      m_lock = true;
+   }
+
+   void
+   Physics::unlock_gravity()
+   {
+      m_lock = false;
    }
 
 }// sdl_platformer
