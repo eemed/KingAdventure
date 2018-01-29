@@ -14,7 +14,7 @@
 int main()
 {
    init_sdl();
-   sdl_platformer::Game game("/home/eeme/code/sdlRE/build/apps/res/world.json");
+   sdl_platformer::Game game("/home/eeme/sdl_games/build/apps/res/world.json");
    game.run();
    return 0;
 }

@@ -102,8 +102,8 @@ namespace sdl_platformer
          {
             m_physics.set_velocity_y(0.0f);
          }
-         if( (cv.m_collision_info.m_right or cv.m_collision_info.m_left) and
-               !hits_ground() )
+         if( (cv.m_collision_info.m_right or cv.m_collision_info.m_left)/* and
+               !hits_ground()*/ )
          {
             m_physics.set_velocity_x(0.0f);
          }
@@ -112,10 +112,12 @@ namespace sdl_platformer
       }
       if( !is_hit )
       {
+         m_physics.set_gravity_enabled(true);
          hits_ground(false);
       }
       else
       {
+         m_physics.set_gravity_enabled(false);
          hits_ground(true);
          m_physics.set_velocity_y(0.0f);
       }

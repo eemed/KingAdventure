@@ -10,9 +10,9 @@ namespace sdl_platformer
 {
    Physics::Physics()
       : m_velocity_x(0), m_velocity_y(0),
-        m_acceleration_x(50), m_acceleration_y(1),
+        m_acceleration_x(1.30), m_acceleration_y(1),
         m_gravity_enabled(true), m_gravity_modifier( 0.2f ),
-        m_speed_limit(8)
+        m_speed_limit(4)
    {
    }
 
@@ -78,29 +78,53 @@ namespace sdl_platformer
    void
    Physics::move_left(float elapsed_time)
    {
-      m_velocity_x += -(elapsed_time * m_acceleration_x);
-      m_speed_limit = 6;
+      if( m_velocity_x > -1 )
+      {
+         m_velocity_x -= 30 * m_acceleration_x * elapsed_time;
+      }
+      else
+      {
+         m_velocity_x *= 10 * elapsed_time * m_acceleration_x + 1;
+      }
    }
 
    void
    Physics::move_right(float elapsed_time)
    {
-      m_velocity_x += elapsed_time * m_acceleration_x;
-      m_speed_limit = 6;
+      if( m_velocity_x < 1 )
+      {
+         m_velocity_x += 30 *m_acceleration_x * elapsed_time;
+      }
+      else
+      {
+         m_velocity_x *= 10 * elapsed_time * m_acceleration_x + 1;
+      }
    }
 
    void
    Physics::speed_left(float elapsed_time)
    {
-      m_velocity_x += -(elapsed_time * m_acceleration_x);
-      m_speed_limit = 10;
+      if( m_velocity_x > -1 )
+      {
+         m_velocity_x -= 1;
+      }
+      else
+      {
+         m_velocity_x *= 20 * elapsed_time * m_acceleration_x + 1;
+      }
    }
 
    void
    Physics::speed_right(float elapsed_time)
    {
-      m_velocity_x += elapsed_time * m_acceleration_x;
-      m_speed_limit = 10;
+      if( m_velocity_x < 1 )
+      {
+         m_velocity_x += 1;
+      }
+      else
+      {
+         m_velocity_x *= 20 * elapsed_time * m_acceleration_x + 1;
+      }
    }
 
    void
@@ -127,10 +151,11 @@ namespace sdl_platformer
       }
 
       //apply friction
-      m_velocity_x -= m_velocity_x * cur->get_friction_modifier();
+      m_velocity_x *= cur->get_friction_modifier();
+      std::cout << m_velocity_x << "\n";
 
       //apply gravity if needed
-      if( m_gravity_enabled and !cur->get_player().hits_ground())
+      if( m_gravity_enabled )
       {
          m_velocity_y += m_gravity_modifier * m_acceleration_y;
       }
