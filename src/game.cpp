@@ -36,7 +36,7 @@ namespace sdl_platformer
    void
    Game::run()
    {
-      const double dt = 0.01;
+      const double dt = 0.0078125;
       int prev_time = 0;
       int current_time = SDL_GetTicks();
       float delta_time = 0;
@@ -46,6 +46,10 @@ namespace sdl_platformer
          prev_time = current_time;
          current_time = SDL_GetTicks();
          delta_time = (current_time - prev_time) / 1000.0f;
+         if( delta_time > 0.1 )
+         {
+            delta_time = 0.1;
+         }
 
          //Process input
          m_input.process_events(delta_time);
