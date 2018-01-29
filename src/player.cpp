@@ -14,7 +14,8 @@ namespace sdl_platformer
         m_physics( Physics()),
         m_name( name ),
         m_on_ground(true),
-        m_jump_state( NOT_JUMPING )
+        m_jump_state( NOT_JUMPING ),
+        m_fly_mode(false)
    {
    }
 
@@ -90,7 +91,10 @@ namespace sdl_platformer
       // -2 means prefer y collisions
       // 3 means prefer x collisions
       int padding = ( hits_ground() or (m_jump_state == FALL) ) ? -2 : 3;
-      m_hitbox.set_y( m_hitbox.get_y() + 1);
+      if( !m_fly_mode )
+      {
+         m_hitbox.set_y( m_hitbox.get_y() + 1);
+      }
       for( auto & elem : cur->get_render_context()->m_squares )
       {
          CollisionVector cv = rect_collides_with_rect( m_hitbox, elem, padding);
@@ -136,6 +140,24 @@ namespace sdl_platformer
    }
 
    void
+   Player::move_up(float elapsed_time)
+   {
+      if( m_fly_mode )
+      {
+         m_physics.move_up(elapsed_time);
+      }
+   }
+
+   void
+   Player::move_down(float elapsed_time)
+   {
+      if( m_fly_mode )
+      {
+         m_physics.move_down(elapsed_time);
+      }
+   }
+
+   void
    Player::speed_right(float elapsed_time)
    {
       m_physics.move_right(elapsed_time);
@@ -162,4 +184,24 @@ namespace sdl_platformer
    {
       m_hitbox.draw();
    }
+
+   void
+   Player::toggle_gravity()
+   {
+      if( m_physics.get_gravity_enabled() )
+      {
+         m_physics.set_gravity_enabled( !m_physics.get_gravity_enabled() );
+         m_physics.lock_gravity();
+         m_fly_mode = true;
+         std::cout << "[PLAYER] Flymode Enabled\n";
+      }
+      else
+      {
+         m_physics.set_gravity_enabled( !m_physics.get_gravity_enabled() );
+         m_physics.unlock_gravity();
+         m_fly_mode = false;
+         std::cout << "[PLAYER] Flymode Disabled\n";
+      }
+   }
+
 }// sdl_platformer

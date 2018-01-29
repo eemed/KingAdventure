@@ -74,6 +74,10 @@ namespace sdl_platformer
          World::current()->get_player().move_left(elapsed_time);
       if( m_keyboard[SDL_SCANCODE_Q] )
          Game::current()->terminate();
+      if( m_keyboard[SDL_SCANCODE_UP] )
+         World::current()->get_player().move_up(elapsed_time);
+      if( m_keyboard[SDL_SCANCODE_DOWN] )
+         World::current()->get_player().move_down(elapsed_time);
 
       SDL_Event event;
       while( SDL_PollEvent( &event ) )
@@ -89,6 +93,9 @@ namespace sdl_platformer
             {
                case SDLK_SPACE:
                   World::current()->get_player().jump();
+                  break;
+               case SDLK_f:
+                  World::current()->get_player().toggle_gravity();
                   break;
                default:
                   break;
@@ -133,13 +140,4 @@ namespace sdl_platformer
          }
       }
    }
-
-   //void
-   //InputHandler::activate() { _current = this; }
-
-   //void
-   //InputHandler::deactivate() { _current = NULL; }
-
-   //InputHandler *
-   //InputHandler::current() { return _current; }
 } // sdl_platformer
