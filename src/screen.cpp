@@ -30,7 +30,7 @@ namespace sdl_platformer
    {
         SDL_Renderer * renderer =
            SDL_CreateRenderer(window, -1,
-                 SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+             SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
         if (renderer == nullptr){
             SDL_DestroyWindow(window);
             std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
@@ -61,20 +61,11 @@ namespace sdl_platformer
       SDL_SetRenderDrawColor( m_renderer, 0, 0, 0, 255 );
       SDL_RenderClear( m_renderer );
       ctx.draw();
-
       World::current()->get_player().draw();
+
       // Render the changes above
       SDL_RenderPresent( m_renderer );
    }
-
-   //Screen *
-   //Screen::current() { return m_current; }
-
-   //void
-   //Screen::select()
-   //{
-   //   m_current = this;
-   //}
 
    SDL_Renderer *
    Screen::get_renderer()

@@ -23,10 +23,6 @@ namespace sdl_platformer
          void draw( RenderContext & ) const;
          void resize(int width, int height);
 
-         //static Screen * current();
-
-         //void select();
-
          SDL_Renderer * get_renderer();
    };
 
