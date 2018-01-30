@@ -3,9 +3,11 @@
 
 #include <string>
 
+#include "SDL2/SDL.h"
 #include "rectangle.h"
 #include "physics.h"
 #include "collision_vector.h"
+#include "screen.h"
 
 namespace sdl_platformer
 {
@@ -26,11 +28,16 @@ namespace sdl_platformer
          bool m_on_ground;
          jump_state m_jump_state;
          bool m_fly_mode;
+         SDL_Rect m_source;
+         SDL_Surface * m_surface;
+         SDL_Texture * m_texture;
+         SDL_Rect m_dest;
 
       public:
 
          Player(int x, int y,
                int width, int height, Color col, std::string name);
+         ~Player();
 
          std::string get_name() const;
 

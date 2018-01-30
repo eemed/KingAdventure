@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 
+#include "SDL2/SDL_image.h"
 #include "player.h"
 #include "collision.h"
 #include "world.h"
@@ -15,8 +16,30 @@ namespace sdl_platformer
         m_name( name ),
         m_on_ground(true),
         m_jump_state( NOT_JUMPING ),
-        m_fly_mode(false)
+        m_fly_mode(false),
+        m_surface(NULL),
+        m_texture(NULL)
    {
+      IMG_Init(IMG_INIT_PNG);
+      m_surface =
+         IMG_Load("/home/eeme/code/sdl_games/res/player2.png");
+      SDL_SetColorKey( m_surface, SDL_TRUE,
+            SDL_MapRGB( m_surface->format , 255, 0, 255) );
+      m_texture = SDL_CreateTextureFromSurface(
+            Screen::current()->get_renderer(), m_surface);
+      m_source.x = 35;
+      m_source.y = 2;
+      m_source.w = 195;
+      m_source.h = 259;
+
+      m_dest.w = 50;
+      m_dest.h = 70;
+      SDL_FreeSurface(m_surface);
+   }
+
+   Player::~Player()
+   {
+      SDL_DestroyTexture(m_texture);
    }
 
    std::string
@@ -54,6 +77,8 @@ namespace sdl_platformer
       }
       set_jump_state();
       fix_collision();
+      m_dest.x = m_hitbox.get_x() - (m_dest.w - m_hitbox.get_width() ) / 2;
+      m_dest.y = m_hitbox.get_y() - (m_dest.h - m_hitbox.get_height() ) ;
       //std::cout << "Hbox: " << m_hitbox.get_x() << ", " << m_hitbox.get_y() << "\n";
    }
 
@@ -183,6 +208,7 @@ namespace sdl_platformer
    Player::draw() const
    {
       m_hitbox.draw();
+      SDL_RenderCopy(Screen::current()->get_renderer(), m_texture, &m_source, &m_dest);
    }
 
    void

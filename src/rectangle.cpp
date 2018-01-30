@@ -82,4 +82,10 @@ namespace sdl_platformer
 
    int Rectangle::get_half_x_len() const { return get_x_middle() - m_rectangle.x; }
    int Rectangle::get_half_y_len() const { return get_y_middle() - m_rectangle.y; }
+
+   SDL_Rect
+   Rectangle::get_rect() const
+   {
+      return m_rectangle;
+   }
 }// sdl_platformer

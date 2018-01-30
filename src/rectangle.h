@@ -7,9 +7,8 @@ namespace sdl_platformer
 {
    class Rectangle : public GameObject
    {
-      protected:
-         SDL_Rect m_rectangle;
       public:
+         SDL_Rect m_rectangle;
          Rectangle(int pos_x, int pos_y, int width, int height, Color color);
          ~Rectangle();
 
@@ -39,6 +38,7 @@ namespace sdl_platformer
 
          void draw() const;
          void move( Vector &, float elapsed_time);
+         SDL_Rect get_rect() const;
    };
 } //namespace sdl_platformer
 #endif // _RECTANGLE_
