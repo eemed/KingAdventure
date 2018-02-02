@@ -7,49 +7,32 @@
 #include "world.h"
 #include "current.h"
 
+
 namespace sdl_platformer
 {
    Player::Player(int x, int y, int width, int height,
-         Color col, std::string name)
-      : m_hitbox(Rectangle(x, y, width, height, col)),
+         Color col, std::string name, char_type t)
+      : m_hitbox( Rectangle(x, y, width, height, col) ),
         m_physics( Physics()),
-        m_name( name ),
-        m_on_ground(true),
-        m_jump_state( NOT_JUMPING ),
-        m_fly_mode(false),
-        m_surface(NULL),
-        m_texture(NULL)
+        m_state( PlayerState( name, NOT_JUMPING, false, true, RIGHT) ),
+        m_sprite_manager( SpriteManager(t) )
    {
-      IMG_Init(IMG_INIT_PNG);
-      m_surface =
-         IMG_Load("/home/eeme/code/sdl_games/res/player2.png");
-      SDL_SetColorKey( m_surface, SDL_TRUE,
-            SDL_MapRGB( m_surface->format , 255, 0, 255) );
-      m_texture = SDL_CreateTextureFromSurface(
-            Screen::current()->get_renderer(), m_surface);
-      m_source.x = 35;
-      m_source.y = 2;
-      m_source.w = 195;
-      m_source.h = 259;
-
-      m_dest.w = 50;
-      m_dest.h = 70;
-      SDL_FreeSurface(m_surface);
+      m_dest.w = 64;
+      m_dest.h = 64;
    }
 
    Player::~Player()
    {
-      SDL_DestroyTexture(m_texture);
    }
 
    std::string
-   Player::get_name() const { return m_name; }
+   Player::get_name() const { return m_state.m_name; }
 
    bool
-   Player::hits_ground() const { return m_on_ground; }
+   Player::hits_ground() const { return m_state.m_on_ground; }
 
    jump_state
-   Player::get_jump_state() const { return m_jump_state; }
+   Player::get_jump_state() const { return m_state.m_jump_state; }
 
    void
    Player::update(float elapsed_time)
@@ -58,6 +41,16 @@ namespace sdl_platformer
 
       float new_x = m_hitbox.get_x() + m_physics.get_velocity_x();
       float new_y = m_hitbox.get_y() + m_physics.get_velocity_y();
+
+      // walking
+      if( abs(m_physics.get_velocity_x()) > 1 )
+      {
+         m_sprite_manager.update_player(WALK, elapsed_time);
+      }
+      else
+      {
+         m_sprite_manager.force_update_player(IDLE);
+      }
 
       if( m_physics.get_velocity_x() < 0 )
       {
@@ -76,35 +69,60 @@ namespace sdl_platformer
          m_hitbox.set_y( floor(new_y) );
       }
       set_jump_state();
+
+      // Jumping
+      if( m_state.m_jump_state == RISE )
+      {
+         m_sprite_manager.force_update_player(JUMP_RISE);
+      }
+      if( m_state.m_jump_state == FALL )
+      {
+         m_sprite_manager.force_update_player(JUMP_FALL);
+      }
+
       fix_collision();
-      m_dest.x = m_hitbox.get_x() - (m_dest.w - m_hitbox.get_width() ) / 2;
+      m_dest.x = m_hitbox.get_x() - (m_dest.w - m_hitbox.get_width() ) / 2 - 1;
       m_dest.y = m_hitbox.get_y() - (m_dest.h - m_hitbox.get_height() ) ;
+      update_facing();
       //std::cout << "Hbox: " << m_hitbox.get_x() << ", " << m_hitbox.get_y() << "\n";
    }
 
+   void
+   Player::update_facing()
+   {
+      if( m_physics.get_velocity_x() > 0 )
+      {
+         m_state.m_facing = RIGHT;
+      }
+      if( m_physics.get_velocity_x() < 0 )
+      {
+         m_state.m_facing = LEFT;
+      }
+   }
    void
    Player::set_jump_state()
    {
       if( hits_ground() )
       {
-         m_jump_state = NOT_JUMPING;
+         m_state.m_jump_state = NOT_JUMPING;
       }
       else if( ceil(m_physics.get_velocity_y()) > 0 )
       {
-         m_jump_state = FALL;
+         m_state.m_jump_state = FALL;
       }
       else if( m_physics.get_velocity_y() < 0 )
       {
-         m_jump_state = RISE;
+         m_state.m_jump_state = RISE;
       }
-      else if( m_jump_state == RISE and m_physics.get_velocity_y() == 0)
+      else if( m_state.m_jump_state == RISE
+            and abs(m_physics.get_velocity_y()) < 0.3f)
       {
-         m_jump_state = TOP;
+         m_state.m_jump_state = TOP;
       }
    }
 
    void
-   Player::hits_ground(bool n_hits) { m_on_ground = n_hits; }
+   Player::hits_ground(bool n_hits) { m_state.m_on_ground = n_hits; }
 
    void
    Player::fix_collision()
@@ -115,8 +133,8 @@ namespace sdl_platformer
       bool is_hit = false;
       // -2 means prefer y collisions
       // 3 means prefer x collisions
-      int padding = ( hits_ground() or (m_jump_state == FALL) ) ? -2 : 3;
-      if( !m_fly_mode )
+      int padding = ( hits_ground() or (m_state.m_jump_state == FALL) ) ? -2 : 3;
+      if( !m_state.m_fly_mode )
       {
          m_hitbox.set_y( m_hitbox.get_y() + 1);
       }
@@ -130,11 +148,6 @@ namespace sdl_platformer
          if( cv.m_collision_info.m_top )
          {
             m_physics.set_velocity_y(0.0f);
-         }
-         if( (cv.m_collision_info.m_right or cv.m_collision_info.m_left)/* and
-               !hits_ground()*/ )
-         {
-            m_physics.set_velocity_x(0.0f);
          }
          m_hitbox.set_y( m_hitbox.get_y() + cv.m_y );
          m_hitbox.set_x( m_hitbox.get_x() + cv.m_x );
@@ -167,7 +180,7 @@ namespace sdl_platformer
    void
    Player::move_up(float elapsed_time)
    {
-      if( m_fly_mode )
+      if( m_state.m_fly_mode )
       {
          m_physics.move_up(elapsed_time);
       }
@@ -176,7 +189,7 @@ namespace sdl_platformer
    void
    Player::move_down(float elapsed_time)
    {
-      if( m_fly_mode )
+      if( m_state.m_fly_mode )
       {
          m_physics.move_down(elapsed_time);
       }
@@ -200,15 +213,23 @@ namespace sdl_platformer
       if( hits_ground() )
       {
          m_physics.jump();
-         m_jump_state = RISE;
+         m_state.m_jump_state = RISE;
       }
    }
 
    void
    Player::draw() const
    {
-      m_hitbox.draw();
-      SDL_RenderCopy(Screen::current()->get_renderer(), m_texture, &m_source, &m_dest);
+      //m_hitbox.draw();
+      std::pair< SDL_Rect , SDL_Texture *> p = m_sprite_manager.get_player();
+      //std::cout <<" x: " <<  p.first.x << "\n";
+      //std::cout <<" y: " <<  p.first.y << "\n";
+      //std::cout <<"d x: " <<  m_dest.x << "\n";
+      //std::cout <<"d y: " <<  m_dest.y << "\n";
+      SDL_RendererFlip flip =
+         ( m_state.m_facing == RIGHT) ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
+      SDL_RenderCopyEx(Screen::current()->get_renderer(),
+            p.second, &p.first, &m_dest, 0, NULL, flip);
    }
 
    void
@@ -217,15 +238,15 @@ namespace sdl_platformer
       if( m_physics.get_gravity_enabled() )
       {
          m_physics.set_gravity_enabled( !m_physics.get_gravity_enabled() );
-         m_physics.lock_gravity();
-         m_fly_mode = true;
+         m_physics.enable_fly_mode();
+         m_state.m_fly_mode = true;
          std::cout << "[PLAYER] Flymode Enabled\n";
       }
       else
       {
          m_physics.set_gravity_enabled( !m_physics.get_gravity_enabled() );
-         m_physics.unlock_gravity();
-         m_fly_mode = false;
+         m_physics.disable_fly_mode();
+         m_state.m_fly_mode = false;
          std::cout << "[PLAYER] Flymode Disabled\n";
       }
    }

@@ -16,7 +16,7 @@ namespace sdl_platformer
          bool m_gravity_enabled;
          float m_gravity_modifier;
          float m_speed_limit;
-         bool m_lock;
+         bool m_fly_mode;
 
       public:
          Physics();
@@ -54,8 +54,12 @@ namespace sdl_platformer
          void jump();
          void update(float elapsed_time);
 
-         void lock_gravity();
-         void unlock_gravity();
+         void enable_fly_mode();
+         void disable_fly_mode();
+
+         void stop_motion_at(float x);
+         void cap_x_velocity(float limit);
+         void handle_fly_mode(float elapsed_time);
    };
 } // namespace sdl_platformer
 #endif //_PHYSICS_

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <boost/filesystem.hpp>
 #include "game.h"
    bool
    init_sdl()
@@ -13,8 +14,10 @@
 
 int main()
 {
+   boost::filesystem::path p = boost::filesystem::current_path();
+   p /= "/build/apps/res/worlds/world.json";
    init_sdl();
-   sdl_platformer::Game game("/home/eeme/code/sdl_games/build/apps/res/world.json");
+   sdl_platformer::Game game( p.make_preferred().string().c_str());
    game.run();
    return 0;
 }
