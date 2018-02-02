@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include <cmath>
 
 #include "physics.h"
 #include "world.h"
@@ -12,7 +13,7 @@ namespace sdl_platformer
       : m_velocity_x(0), m_velocity_y(0),
         m_acceleration_x(1.30), m_acceleration_y(1),
         m_gravity_enabled(true), m_gravity_modifier( 0.2f ),
-        m_speed_limit(4), m_lock(false)
+        m_speed_limit(4), m_fly_mode(false)
    {
    }
 
@@ -60,7 +61,7 @@ namespace sdl_platformer
    void
    Physics::set_gravity_enabled(bool gravity_enabled)
    {
-      if( !m_lock )
+      if( !m_fly_mode )
       {
          m_gravity_enabled = gravity_enabled;
       }
@@ -162,33 +163,60 @@ namespace sdl_platformer
    }
 
    void
-   Physics::update(float elapsed_time)
+   Physics::stop_motion_at(float speed)
    {
-      World * cur = World::current();
-      if( abs(m_velocity_x) < 0.1f )
+      if( abs(m_velocity_x) < speed )
       {
          m_velocity_x = 0;
       }
-      if( m_velocity_x > m_speed_limit )
-      {
-         m_velocity_x = m_speed_limit;
-      }
-      else if( m_velocity_x < -m_speed_limit )
-      {
-         m_velocity_x = -m_speed_limit;
-      }
+   }
 
-      if( m_lock )
+   void
+   Physics::cap_x_velocity(float speed_limit)
+   {
+      if( m_velocity_x > speed_limit )
       {
-         if( m_velocity_y > m_speed_limit )
+         m_velocity_x = speed_limit;
+      }
+      else if( m_velocity_x < -speed_limit )
+      {
+         m_velocity_x = -speed_limit;
+      }
+   }
+
+   void
+   Physics::handle_fly_mode(float elapsed_time)
+   {
+      if( m_fly_mode )
+      {
+         cap_x_velocity( m_speed_limit * 1.5 );
+         if( m_velocity_y > m_speed_limit * 1.5 )
          {
             m_velocity_y = m_speed_limit;
          }
-         else if( m_velocity_y < -m_speed_limit )
+         else if( m_velocity_y < -m_speed_limit * 1.5 )
          {
             m_velocity_y = -m_speed_limit;
          }
+         m_velocity_y *= World::current()->get_friction_modifier();
+         float padding = 1;
+         if( m_velocity_y >= 0 - padding)
+         {
+            move_down( std::fmax(elapsed_time / 6, 0.0001) );
+         }
       }
+   }
+   void
+   Physics::update(float elapsed_time)
+   {
+      World * cur = World::current();
+      stop_motion_at(0.1f);
+      if( !m_fly_mode)
+      {
+         cap_x_velocity(m_speed_limit);
+      }
+
+      handle_fly_mode(elapsed_time);
 
       //apply friction
       m_velocity_x *= cur->get_friction_modifier();
@@ -199,26 +227,18 @@ namespace sdl_platformer
       {
          m_velocity_y += m_gravity_modifier * m_acceleration_y;
       }
-      else if( m_lock ) // means user in fly mode
-      {
-         m_velocity_y *= cur->get_friction_modifier();
-      }
-      if(elapsed_time > 100 )
-      {
-         m_velocity_x = 0;
-      }
    }
 
    void
-   Physics::lock_gravity()
+   Physics::enable_fly_mode()
    {
-      m_lock = true;
+      m_fly_mode = true;
    }
 
    void
-   Physics::unlock_gravity()
+   Physics::disable_fly_mode()
    {
-      m_lock = false;
+      m_fly_mode = false;
    }
 
 }// sdl_platformer

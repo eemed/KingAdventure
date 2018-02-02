@@ -1,6 +1,6 @@
 CXX      := g++
 CXXFLAGS := -pedantic-errors -Wall -Wextra -O3 -std=c++11
-LDFLAGS  := -L/usr/lib -lstdc++ -lm -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image
+LDFLAGS  := -L/usr/lib -lstdc++ -lm -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lboost_filesystem -lboost_system
 BUILD    := build
 OBJ_DIR  := $(BUILD)/objects
 APP_DIR  := $(BUILD)/apps
@@ -28,7 +28,7 @@ build:
 	@mkdir -p $(APP_DIR)
 	@mkdir -p $(OBJ_DIR)
 	@mkdir -p $(RES_DIR)
-	@cp res/* $(RES_DIR)
+	@cp -r res/* $(RES_DIR)
 
 clean:
 	rm -rf build/*

@@ -8,35 +8,24 @@
 #include "physics.h"
 #include "collision_vector.h"
 #include "screen.h"
+#include "player_state.h"
+#include "sprite_manager.h"
 
 namespace sdl_platformer
 {
-   enum jump_state
-   {
-      NOT_JUMPING, RISE, TOP, FALL
-   };
-
    class Player
    {
       private:
-
          Rectangle m_hitbox;
          Physics m_physics;
 
-         std::string m_name;
-
-         bool m_on_ground;
-         jump_state m_jump_state;
-         bool m_fly_mode;
-         SDL_Rect m_source;
-         SDL_Surface * m_surface;
-         SDL_Texture * m_texture;
+         PlayerState m_state;
+         SpriteManager m_sprite_manager;
          SDL_Rect m_dest;
 
       public:
-
          Player(int x, int y,
-               int width, int height, Color col, std::string name);
+               int width, int height, Color col, std::string name, char_type t);
          ~Player();
 
          std::string get_name() const;
@@ -62,6 +51,7 @@ namespace sdl_platformer
 
          void fix_collision();
          void draw() const;
+         void update_facing();
    };
 } // namespace sdl_platformer
 #endif // _PLAYER_

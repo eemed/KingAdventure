@@ -15,6 +15,8 @@ namespace sdl_platformer
       private:
          SDL_Window * m_window;
          SDL_Renderer * m_renderer;
+         int m_width;
+         int m_height;
          //static Screen * m_current;
       public:
          Screen(int x = 0, int y = 0, int width = 1600, int height = 900);
@@ -22,6 +24,8 @@ namespace sdl_platformer
 
          void draw( RenderContext & ) const;
          void resize(int width, int height);
+         int get_width() const;
+         int get_height() const;
 
          SDL_Renderer * get_renderer();
    };

@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "SDL2/SDL_image.h"
 #include "screen.h"
 #include "world.h"
 
@@ -17,7 +18,7 @@ namespace sdl_platformer
    create_window(int & x, int & y, int & w, int & h)
    {
         SDL_Window * window =
-           SDL_CreateWindow("Tetris", x, y, w, h, 0);
+           SDL_CreateWindow("Pixel Adventure", x, y, w, h, 0);
         if (window == nullptr){
             std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
             return NULL;
@@ -43,8 +44,11 @@ namespace sdl_platformer
 
    Screen::Screen(int x, int y, int width, int height)
       : m_window( create_window(x, y, width, height) ),
-        m_renderer( create_renderer( m_window ) )
+        m_renderer( create_renderer( m_window ) ),
+        m_width( width ),
+        m_height( height )
    {
+      IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
       setup_renderer(m_renderer, width, height);
       activate();
    }
@@ -58,7 +62,7 @@ namespace sdl_platformer
    void
    Screen::draw( RenderContext & ctx ) const
    {
-      SDL_SetRenderDrawColor( m_renderer, 0, 0, 0, 255 );
+      SDL_SetRenderDrawColor( m_renderer, 50, 110, 85, 255 );
       SDL_RenderClear( m_renderer );
       ctx.draw();
       World::current()->get_player().draw();
@@ -71,5 +75,17 @@ namespace sdl_platformer
    Screen::get_renderer()
    {
       return m_renderer;
+   }
+
+   int
+   Screen::get_width() const
+   {
+      return m_width;
+   }
+
+   int
+   Screen::get_height() const
+   {
+      return m_width;
    }
 }// sdl_platformer
