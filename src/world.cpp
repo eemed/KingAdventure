@@ -7,7 +7,7 @@ namespace sdl_platformer
 
    World::World(std::string filename)
       : m_render_context( RenderContext(filename) ),
-        m_player( Player(35, 35, 30, 45, Color(255, 0, 0, 255), "Jonne", KING) ),
+        m_player( Player(32, 400, 50, 70, Color(255, 0, 0, 255), "Jonne", KING) ),
         m_friction_modifier(0.95f)
    {
       activate();

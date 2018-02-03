@@ -17,8 +17,8 @@ namespace sdl_platformer
         m_state( PlayerState( name, NOT_JUMPING, false, true, RIGHT) ),
         m_sprite_manager( SpriteManager(t) )
    {
-      m_dest.w = 64;
-      m_dest.h = 64;
+      m_dest.w = 64 + 32;
+      m_dest.h = 64 + 32;
    }
 
    Player::~Player()

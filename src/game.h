@@ -8,6 +8,7 @@
 #include "menu.h"
 #include "input_handler.h"
 #include "current.h"
+#include "sprite_factory.h"
 
 namespace sdl_platformer
 {
@@ -15,6 +16,7 @@ namespace sdl_platformer
    {
       private:
          Screen m_screen;
+         SpriteFactory m_factory;
          Menu m_menu;
          World m_world;
          InputHandler m_input;

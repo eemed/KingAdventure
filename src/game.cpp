@@ -19,7 +19,9 @@ namespace sdl_platformer
    //Game * Game::_current = NULL;
 
    Game::Game( std::string world_txt )
-      : m_screen( Screen() ),
+      :
+      m_screen( Screen() ),
+      m_factory( SpriteFactory() ),
       m_menu( Menu(std::vector<std::string>(1,"Start") ) ),
       m_world( World( world_txt )),
       m_running( true )

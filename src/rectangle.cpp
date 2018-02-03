@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "sprite_factory.h"
 #include "rectangle.h"
 #include "screen.h"
 #include "current.h"
@@ -10,6 +11,23 @@ namespace sdl_platformer
          int width, int height, Color color)
       : GameObject(pos_x, pos_y, color)
    {
+      m_rectangle.x = pos_x;
+      m_rectangle.y = pos_y;
+      m_rectangle.w = width;
+      m_rectangle.h = height;
+
+      m_source.x = 0;
+   }
+
+   Rectangle::Rectangle(int pos_x, int pos_y, int width, int height,
+         SDL_Rect sprite)
+      : GameObject( pos_x, pos_y, Color( 200, 200, 200, 255) )
+   {
+      m_source.x = sprite.x;
+      m_source.y = sprite.y;
+      m_source.w = sprite.w;
+      m_source.h = sprite.h;
+
       m_rectangle.x = pos_x;
       m_rectangle.y = pos_y;
       m_rectangle.w = width;
@@ -50,12 +68,23 @@ namespace sdl_platformer
       Screen * current = Screen::current();
       if( current != NULL )
       {
-         SDL_SetRenderDrawColor( current->get_renderer(),
-               m_color.get_red(),
-               m_color.get_green(),
-               m_color.get_blue(),
-               m_color.get_alpha() );
-         SDL_RenderFillRect( current->get_renderer(), &m_rectangle);
+         if( m_source.x == 0 )
+         {
+            SDL_SetRenderDrawColor( current->get_renderer(),
+                  m_color.get_red(),
+                  m_color.get_green(),
+                  m_color.get_blue(),
+                  m_color.get_alpha() );
+            SDL_RenderFillRect( current->get_renderer(), &m_rectangle);
+         }
+         else
+         {
+            if (SDL_RenderCopy( current->get_renderer(),
+                  SpriteFactory::current()->get_texture(), &m_source, &m_rectangle) != 0)
+            {
+               std::cout << SDL_GetError();
+            }
+         }
       }
       else
       {
