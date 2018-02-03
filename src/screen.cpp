@@ -64,6 +64,7 @@ namespace sdl_platformer
    {
       SDL_SetRenderDrawColor( m_renderer, 50, 110, 85, 255 );
       SDL_RenderClear( m_renderer );
+
       ctx.draw();
       World::current()->get_player().draw();
 

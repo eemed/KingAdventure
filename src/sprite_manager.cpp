@@ -7,7 +7,7 @@
 
 namespace sdl_platformer
 {
-   SpriteManager::SpriteManager( char_type t)\
+   SpriteManager::SpriteManager( char_type t)
       : m_animation_speed_acc(0)
    {
       //Init images
@@ -31,22 +31,6 @@ namespace sdl_platformer
    {
       SDL_DestroyTexture(m_chars);
       //SDL_DestroyTexture(m_env);
-   }
-
-   SDL_Texture *
-   SpriteManager::texture_from_surface(SDL_Surface * surface)
-   {
-      std::cout << "creating texture\n";
-      //Magenta is transparent
-      SDL_SetColorKey( surface,
-            SDL_TRUE, SDL_MapRGB( surface->format, 255, 0 ,255) );
-
-      //Get current screen renderer and make surface
-      SDL_Texture * tex = SDL_CreateTextureFromSurface(
-            Screen::current()->get_renderer(), surface);
-      std::cout << "done\n";
-
-      return tex;
    }
 
    bool
@@ -133,4 +117,21 @@ namespace sdl_platformer
       SDL_Rect a = m_source_player;
       return std::pair< SDL_Rect , SDL_Texture *> (a, m_chars);
    }
+
+   SDL_Texture *
+   texture_from_surface(SDL_Surface * surface)
+   {
+      std::cout << "creating texture\n";
+      //Magenta is transparent
+      SDL_SetColorKey( surface,
+            SDL_TRUE, SDL_MapRGB( surface->format, 255, 0 ,255) );
+
+      //Get current screen renderer and make surface
+      SDL_Texture * tex = SDL_CreateTextureFromSurface(
+            Screen::current()->get_renderer(), surface);
+      std::cout << "done\n";
+
+      return tex;
+   }
+
 } // sdl_platformer

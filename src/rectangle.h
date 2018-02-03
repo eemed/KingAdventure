@@ -9,7 +9,10 @@ namespace sdl_platformer
    {
       public:
          SDL_Rect m_rectangle;
+         SDL_Rect m_source;
          Rectangle(int pos_x, int pos_y, int width, int height, Color color);
+         Rectangle(int pos_x, int pos_y, int width, int height,
+               SDL_Rect sprite);
          ~Rectangle();
 
          void set_width(int new_width);

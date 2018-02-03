@@ -14,6 +14,7 @@ namespace sdl_platformer
       public:
          std::vector< Rectangle > m_squares;
          std::vector< Circle > m_circles;
+         std::vector< Rectangle > m_decor_back;
          SDL_Texture * m_bg;
          SDL_Rect m_bg_rect;
 

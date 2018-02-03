@@ -1,10 +1,11 @@
 #include <iostream>
 #include <fstream>
+#include <SDL2/SDL_image.h>
 
 #include "render_context.h"
 #include "json.hpp"
 #include "screen.h"
-#include "SDL2/SDL_image.h"
+#include "sprite_factory.h"
 
 using json = nlohmann::json;
 
@@ -46,11 +47,15 @@ namespace sdl_platformer
    RenderContext::draw() const
    {
       //SDL_RenderCopy(Screen::current()->get_renderer(), m_bg, &m_bg_rect, &m_bg_rect);
-      for( const auto & elem : m_squares)
+      //for( const auto & elem : m_squares)
+      //{
+      //   elem.draw();
+      //}
+      for( const auto & elem : m_circles)
       {
          elem.draw();
       }
-      for( const auto & elem : m_circles)
+      for( const auto & elem : m_decor_back)
       {
          elem.draw();
       }
@@ -80,7 +85,7 @@ namespace sdl_platformer
          m_decor_back.push_back(
                Rectangle( elem["x"], elem["y"],
                           elem["w"], elem["h"],
-                          SpriteFactory::get_sprite(elem["texture"]) );
+                          SpriteFactory::current()->get_sprite(elem["texture"]) ) );
       }
       std::string path = parsed["background"];
       SDL_Surface * surface = IMG_Load( path.c_str() );

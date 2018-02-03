@@ -32,11 +32,12 @@ namespace sdl_platformer
          SpriteManager( char_type type);
          ~SpriteManager();
 
-         SDL_Texture * texture_from_surface(SDL_Surface *);
          bool load_sprites();
          void update_player(sprite_type, float elapsed_time);
          void force_update_player(sprite_type);
          std::pair< SDL_Rect , SDL_Texture *> get_player() const;
    };
+
+   SDL_Texture * texture_from_surface(SDL_Surface *);
 } // sdl_platfromer
 #endif // _SPRITE_MANAGER_
