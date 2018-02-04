@@ -117,4 +117,11 @@ namespace sdl_platformer
    {
       return m_rectangle;
    }
+
+   void
+   Rectangle::move(float dx, float dy)
+   {
+      m_rectangle.x += dx;
+      m_rectangle.y += dy;
+   }
 }// sdl_platformer

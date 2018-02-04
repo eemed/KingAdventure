@@ -251,4 +251,25 @@ namespace sdl_platformer
       }
    }
 
+   int
+   Player::get_x() const
+   {
+      return m_hitbox.get_x();
+   }
+
+   int
+   Player::get_y() const
+   {
+      return m_hitbox.get_y();
+   }
+
+   void
+   Player::f_move(float dx, float dy)
+   {
+      m_hitbox.move(dx, dy);
+      m_dest.x += dx;
+      m_dest.y += dy;
+   }
+
+
 }// sdl_platformer

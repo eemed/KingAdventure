@@ -42,6 +42,7 @@ namespace sdl_platformer
          void draw() const;
          void move( Vector &, float elapsed_time);
          SDL_Rect get_rect() const;
+         void move(float dx, float dy);
    };
 } //namespace sdl_platformer
 #endif // _RECTANGLE_

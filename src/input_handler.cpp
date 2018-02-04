@@ -65,19 +65,19 @@ namespace sdl_platformer
    InputHandler::process_player_events(const float & elapsed_time)
    {
       if( m_keyboard[SDL_SCANCODE_RIGHT] and m_keyboard[SDL_SCANCODE_A])
-         World::current()->get_player().speed_right(elapsed_time);
+         World::current()->get_player()->speed_right(elapsed_time);
       else if( m_keyboard[SDL_SCANCODE_RIGHT] )
-         World::current()->get_player().move_right(elapsed_time);
+         World::current()->get_player()->move_right(elapsed_time);
       if( m_keyboard[SDL_SCANCODE_LEFT] and m_keyboard[SDL_SCANCODE_A])
-         World::current()->get_player().speed_left(elapsed_time);
+         World::current()->get_player()->speed_left(elapsed_time);
       else if( m_keyboard[SDL_SCANCODE_LEFT] )
-         World::current()->get_player().move_left(elapsed_time);
+         World::current()->get_player()->move_left(elapsed_time);
       if( m_keyboard[SDL_SCANCODE_Q] )
          Game::current()->terminate();
       if( m_keyboard[SDL_SCANCODE_UP] )
-         World::current()->get_player().move_up(elapsed_time);
+         World::current()->get_player()->move_up(elapsed_time);
       if( m_keyboard[SDL_SCANCODE_DOWN] )
-         World::current()->get_player().move_down(elapsed_time);
+         World::current()->get_player()->move_down(elapsed_time);
 
       SDL_Event event;
       while( SDL_PollEvent( &event ) )
@@ -92,10 +92,10 @@ namespace sdl_platformer
             switch( event.key.keysym.sym )
             {
                case SDLK_SPACE:
-                  World::current()->get_player().jump();
+                  World::current()->get_player()->jump();
                   break;
                case SDLK_f:
-                  World::current()->get_player().toggle_gravity();
+                  World::current()->get_player()->toggle_gravity();
                   break;
                default:
                   break;

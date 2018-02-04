@@ -21,10 +21,7 @@ namespace sdl_platformer
          World(std::string filename);
          ~World();
 
-         //Moves render context to center player
-         //void center_player();
-
-         Player & get_player();
+         Player * get_player();
 
          void update(float elapsed_time);
 

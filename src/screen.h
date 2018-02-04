@@ -17,7 +17,6 @@ namespace sdl_platformer
          SDL_Renderer * m_renderer;
          int m_width;
          int m_height;
-         //static Screen * m_current;
       public:
          Screen(int x = 0, int y = 0, int width = 1600, int height = 900);
          ~Screen();

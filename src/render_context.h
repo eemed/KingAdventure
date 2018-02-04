@@ -28,7 +28,7 @@ namespace sdl_platformer
          void update_squares(std::vector< Rectangle > );
 
          void draw() const;
-         void move(const float & dx, const float & dy);
+         void move(float dx, float dy);
 
          bool load_from_json(std::string filename);
    };
