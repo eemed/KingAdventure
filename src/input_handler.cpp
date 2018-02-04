@@ -29,7 +29,6 @@ namespace sdl_platformer
    void
    InputHandler::process_menu_events()
    {
-
       SDL_Event event;
       while( SDL_PollEvent( &event ) )
       {
@@ -46,13 +45,13 @@ namespace sdl_platformer
                   Game::current()->terminate();
                   break;
                case SDLK_UP:
-                  Menu::current()->move_up();
+                  Game::current()->get_menu()->move_up();
                   break;
                case SDLK_DOWN:
-                  Menu::current()->move_down();
+                  Game::current()->get_menu()->move_down();
                   break;
                case SDLK_SPACE:
-                  Menu::current()->select();
+                  Game::current()->get_menu()->select();
                   break;
                default:
                   break;
@@ -108,11 +107,11 @@ namespace sdl_platformer
    InputHandler::process_events(const float & elapsed_time)
    {
       update_events();
-      if( Menu::current() != NULL )
+      if( Menu::current() != 0   )
       {
          process_menu_events();
       }
-      else if( World::current() != NULL )
+      else if( World::current() != 0 )
       {
          process_player_events( elapsed_time );
       }

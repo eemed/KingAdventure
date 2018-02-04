@@ -66,7 +66,10 @@ namespace sdl_platformer
       SDL_RenderClear( m_renderer );
 
       ctx.draw();
-      World::current()->get_player()->draw();
+      if( World::current() != 0 )
+      {
+         World::current()->get_player()->draw();
+      }
 
       // Render the changes above
       SDL_RenderPresent( m_renderer );
@@ -87,6 +90,6 @@ namespace sdl_platformer
    int
    Screen::get_height() const
    {
-      return m_width;
+      return m_height;
    }
 }// sdl_platformer

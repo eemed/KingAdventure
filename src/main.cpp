@@ -14,10 +14,8 @@
 
 int main()
 {
-   boost::filesystem::path p = boost::filesystem::current_path();
-   p /= "/build/apps/res/worlds/world.json";
    init_sdl();
-   sdl_platformer::Game game( p.make_preferred().string().c_str());
+   sdl_platformer::Game game;
    game.run();
    return 0;
 }

@@ -15,10 +15,12 @@ namespace sdl_platformer
          std::vector< Rectangle > m_squares;
          std::vector< Circle > m_circles;
          std::vector< Rectangle > m_decor_back;
+         std::vector< std::pair< SDL_Rect, SDL_Texture *> > m_text;
          SDL_Texture * m_bg;
          SDL_Rect m_bg_rect;
 
          RenderContext(std::string filename);
+         RenderContext();
          ~RenderContext();
 
          void update(std::vector< Rectangle > ,

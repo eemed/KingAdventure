@@ -6,6 +6,7 @@
 
 #include "render_context.h"
 #include "current.h"
+#include "render_context.h"
 
 namespace sdl_platformer
 {
@@ -17,6 +18,7 @@ namespace sdl_platformer
          SDL_Renderer * m_renderer;
          int m_width;
          int m_height;
+         RenderContext m_ctx;
       public:
          Screen(int x = 0, int y = 0, int width = 1600, int height = 900);
          ~Screen();
