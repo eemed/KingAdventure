@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "world.h"
 #include "sprite_manager.h"
 #include "screen_manager.h"
@@ -11,7 +13,7 @@ namespace sdl_platformer
         m_player( Player(32, 400, 50, 70, Color(255, 0, 0, 255), "Jonne", KING) ),
         m_friction_modifier(0.95f)
    {
-      activate();
+     activate();
    }
 
    World::~World()
