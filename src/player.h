@@ -51,7 +51,11 @@ namespace sdl_platformer
 
          void fix_collision();
          void draw() const;
+         void f_move(float dx, float dy);
          void update_facing();
+
+         int get_x() const;
+         int get_y() const;
    };
 } // namespace sdl_platformer
 #endif // _PLAYER_

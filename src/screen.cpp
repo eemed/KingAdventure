@@ -66,7 +66,7 @@ namespace sdl_platformer
       SDL_RenderClear( m_renderer );
 
       ctx.draw();
-      World::current()->get_player().draw();
+      World::current()->get_player()->draw();
 
       // Render the changes above
       SDL_RenderPresent( m_renderer );

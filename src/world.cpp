@@ -1,5 +1,6 @@
 #include "world.h"
 #include "sprite_manager.h"
+#include "screen_manager.h"
 
 namespace sdl_platformer
 {
@@ -23,10 +24,11 @@ namespace sdl_platformer
    World::update(float elapsed_time)
    {
       m_player.update(elapsed_time);
+      ScreenManager::current()->scroll_by_player(700);
    }
 
-   Player &
-   World::get_player() { return m_player; }
+   Player *
+   World::get_player() { return &m_player; }
 
    float
    World::get_friction_modifier() const { return m_friction_modifier; }

@@ -20,7 +20,7 @@ namespace sdl_platformer
 
    Game::Game( std::string world_txt )
       :
-      m_screen( Screen() ),
+      m_screen_manager( ScreenManager() ),
       m_factory( SpriteFactory() ),
       m_menu( Menu(std::vector<std::string>(1,"Start") ) ),
       m_world( World( world_txt )),
@@ -71,7 +71,7 @@ namespace sdl_platformer
          if( updated )
          {
             //Draw world to current screen
-            m_screen.draw( *m_world.get_render_context() );
+            m_screen_manager.m_screen.draw( *m_world.get_render_context() );
          }
          else
          {

@@ -101,11 +101,18 @@ namespace sdl_platformer
    }
 
    void
-   move(const float & dx, const float & dy)
+   RenderContext::move(float dx, float dy)
    {
-      if( dx == 0 && dy == 0 )
+      if( dx != 0 or dy != 0 )
       {
-         return;
+         for( auto & elem : m_squares)
+         {
+            elem.move(dx,dy);
+         }
+         for( auto & elem : m_decor_back)
+         {
+            elem.move(dx, dy);
+         }
       }
    }
 }// sdl_platformer
