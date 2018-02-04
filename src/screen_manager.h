@@ -16,7 +16,7 @@ namespace sdl_platformer
          ~ScreenManager();
 
          void draw( RenderContext & ) const;
-         void scroll_by_player( int padding);
+         void scroll_by_player(int plus_x, int minus_x, int plus_y, int minus_y);
    };
 } // namespace sdl_platformer
 #endif // _SCREEN_MANAGER_

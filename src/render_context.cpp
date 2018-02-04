@@ -12,6 +12,7 @@ using json = nlohmann::json;
 namespace sdl_platformer
 {
    RenderContext::RenderContext(std::string filename)
+      :  m_bg(NULL)
    {
       if( !load_from_json(filename) )
       {
@@ -19,8 +20,17 @@ namespace sdl_platformer
       }
    }
 
+   RenderContext::RenderContext()
+      :  m_bg(NULL)
+   {
+   }
+
    RenderContext::~RenderContext()
    {
+      if( m_bg != NULL )
+      {
+         SDL_DestroyTexture(m_bg);
+      }
    }
 
    void
@@ -46,7 +56,13 @@ namespace sdl_platformer
    void
    RenderContext::draw() const
    {
-      //SDL_RenderCopy(Screen::current()->get_renderer(), m_bg, &m_bg_rect, &m_bg_rect);
+      if( m_bg != NULL )
+      {
+         SDL_RenderCopy(
+               Screen::current()->get_renderer(),
+               m_bg,
+               &m_bg_rect, &m_bg_rect);
+      }
       //for( const auto & elem : m_squares)
       //{
       //   elem.draw();
@@ -58,6 +74,14 @@ namespace sdl_platformer
       for( const auto & elem : m_decor_back)
       {
          elem.draw();
+      }
+      for( const auto & elem : m_text)
+      {
+         SDL_RenderCopy(
+               Screen::current()->get_renderer(),
+               elem.second,
+               nullptr,
+               &elem.first);
       }
    }
 
@@ -91,12 +115,11 @@ namespace sdl_platformer
       SDL_Surface * surface = IMG_Load( path.c_str() );
       m_bg = SDL_CreateTextureFromSurface(
             Screen::current()->get_renderer(), surface);
+      SDL_FreeSurface(surface);
       m_bg_rect.x = 0;
       m_bg_rect.y = 0;
-      //m_bg_rect.w = Screen::current()->get_width();
-      //m_bg_rect.h = Screen::current()->get_height();
-      m_bg_rect.w = 1600;
-      m_bg_rect.h = 900;
+      m_bg_rect.w = Screen::current()->get_width();
+      m_bg_rect.h = Screen::current()->get_height();
       return true;
    }
 

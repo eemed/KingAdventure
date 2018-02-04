@@ -121,7 +121,7 @@ namespace sdl_platformer
    SDL_Texture *
    texture_from_surface(SDL_Surface * surface)
    {
-      std::cout << "creating texture\n";
+      //std::cout << "Creating Texture\n";
       //Magenta is transparent
       SDL_SetColorKey( surface,
             SDL_TRUE, SDL_MapRGB( surface->format, 255, 0 ,255) );
@@ -129,8 +129,7 @@ namespace sdl_platformer
       //Get current screen renderer and make surface
       SDL_Texture * tex = SDL_CreateTextureFromSurface(
             Screen::current()->get_renderer(), surface);
-      std::cout << "done\n";
-
+      //std::cout << "Created Texture\n" << tex << "\n";
       return tex;
    }
 

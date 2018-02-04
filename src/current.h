@@ -26,6 +26,7 @@ namespace sdl_platformer
          static T * current() { return _current; }
          void activate() { _current = static_cast<T*>(this); }
          void deactivate() { _current = 0; }
+
    };
    template<class T> T* Current<T>::_current = 0;
 } //sdl _platformer

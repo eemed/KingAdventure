@@ -11,7 +11,6 @@ namespace sdl_platformer
       IMG_Init(IMG_INIT_PNG);
       boost::filesystem::path p = boost::filesystem::current_path();
       p /= "build/apps/res/sprites/sheet.png";
-      std::cout << p.string() << std::endl;
       SDL_Surface * environment =
          IMG_Load( p.make_preferred().string().c_str() );
       m_texture = texture_from_surface(environment);
@@ -21,8 +20,8 @@ namespace sdl_platformer
 
    SpriteFactory::~SpriteFactory()
    {
-      deactivate();
       SDL_DestroyTexture( m_texture );
+      deactivate();
    }
 
    SDL_Rect

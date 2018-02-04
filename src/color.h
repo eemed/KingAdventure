@@ -32,6 +32,13 @@ namespace sdl_platformer
          void set_green(int n_green) { green = n_green; }
          void set_alpha(int n_alpha) { alpha = n_alpha; }
 
+         SDL_Color get_sdl_color()
+         {
+            SDL_Color c = {(unsigned char) red,
+                           (unsigned char) green,
+                           (unsigned char)  blue, 255 };
+            return c;
+         }
    };
 } //sdl_platformer
 #endif // _COLOR_

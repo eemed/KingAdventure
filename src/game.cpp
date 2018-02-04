@@ -16,18 +16,20 @@ namespace sdl_platformer
       return true;
    }
 
-   //Game * Game::_current = NULL;
-
-   Game::Game( std::string world_txt )
+   Game::Game()
       :
       m_screen_manager( ScreenManager() ),
       m_factory( SpriteFactory() ),
-      m_menu( Menu(std::vector<std::string>(1,"Start") ) ),
-      m_world( World( world_txt )),
+      m_menu( NULL ),
+      m_world( NULL ),
+      m_input( InputHandler() ),
       m_running( true )
    {
+      std::vector< std::string > menu_items;
+      menu_items.push_back("Play");
+      menu_items.push_back("Quit");
+      m_menu = new (Menu) (menu_items);
       activate();
-      m_menu.deactivate();
    }
 
    Game::~Game()
@@ -63,7 +65,7 @@ namespace sdl_platformer
          while( accumulator >= dt )
          {
             //update logic
-            m_world.update(dt);
+            update(dt);
             accumulator -= dt;
             updated = true;
          }
@@ -71,7 +73,7 @@ namespace sdl_platformer
          if( updated )
          {
             //Draw world to current screen
-            m_screen_manager.m_screen.draw( *m_world.get_render_context() );
+            render();
          }
          else
          {
@@ -81,9 +83,52 @@ namespace sdl_platformer
    }
 
    void
-      Game::terminate()
+   Game::terminate()
+   {
+      m_running = false;
+      //delete stuff
+   }
+
+   void
+   Game::update(float dt)
+   {
+      if( m_world != 0 )
       {
-         m_running = false;
-         //delete stuff
+         m_world->update(dt);
       }
+      if( m_menu != NULL )
+      {
+         m_menu->update();
+      }
+   }
+
+   void
+   Game::render()
+   {
+      if( m_world != 0 )
+      {
+         m_screen_manager.m_screen.draw( *(m_world->get_render_context()) );
+      }
+      else
+      {
+         m_menu->draw();
+      }
+   }
+   void
+   Game::create_world(std::string filename)
+   {
+      m_world = new(World)(filename);
+   }
+
+   Menu *
+   Game::get_menu()
+   {
+      return m_menu;
+   }
+
+   void
+   Game::destroy_menu()
+   {
+      delete m_menu;
+   }
 } //sdl_platformer

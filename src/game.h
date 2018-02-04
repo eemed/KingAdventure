@@ -17,17 +17,23 @@ namespace sdl_platformer
       private:
          ScreenManager m_screen_manager;
          SpriteFactory m_factory;
-         Menu m_menu;
-         World m_world;
+         Menu * m_menu;
+         World * m_world;
          InputHandler m_input;
          bool m_running;
 
       public:
-         Game(std::string filename);
+         Game();
          ~Game();
 
          void run();
          void terminate();
+         void update(float dt);
+         void render();
+         void create_world(std::string filename);
+
+         void destroy_menu();
+         Menu * get_menu();
    };
 } // sdl_platformer
 #endif // _GAME_
