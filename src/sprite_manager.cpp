@@ -36,14 +36,14 @@ namespace sdl_platformer
    bool
    SpriteManager::load_sprites()
    {
-      std::cout << "LoadSprites\n";
+      //std::cout << "LoadSprites\n";
       boost::filesystem::path p = boost::filesystem::current_path();
       p /= "build/apps/res/sprites/characters.png";
       SDL_Surface * characters =
          IMG_Load( p.make_preferred().string().c_str() );
       m_chars = texture_from_surface(characters);
       SDL_FreeSurface( characters );
-      std::cout << "Loaded sprites\n";
+      //std::cout << "Loaded sprites\n";
       return true;
    }
 

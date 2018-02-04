@@ -109,7 +109,7 @@ namespace sdl_platformer
       {
          m_screen_manager.m_screen.draw( *(m_world->get_render_context()) );
       }
-      else
+      if( Menu::current() != 0 )
       {
          m_menu->draw();
       }
@@ -130,5 +130,6 @@ namespace sdl_platformer
    Game::destroy_menu()
    {
       delete m_menu;
+      m_menu = NULL;
    }
 } //sdl_platformer
