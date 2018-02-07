@@ -2,6 +2,8 @@
 #include <string>
 #include <boost/filesystem.hpp>
 
+#include "generator.h"
+
 #include "menu.h"
 #include "screen.h"
 #include "sprite_manager.h"
@@ -19,11 +21,11 @@ namespace sdl_platformer
       m_background_color( Color(20, 20, 20, 255) ),
       m_ctx( RenderContext() )
    {
-     activate();
-     boost::filesystem::path p = boost::filesystem::current_path();
-     p /= "/build/apps/res/fonts/cryonix.ttf";
-     m_font = setup_ttf( p.make_preferred().string().c_str() );
-     update_textures();
+      activate();
+      boost::filesystem::path p = boost::filesystem::current_path();
+      p /= "/build/apps/res/fonts/cryonix.ttf";
+      m_font = setup_ttf( p.make_preferred().string().c_str() );
+      update_textures();
    }
 
    Menu::~Menu()
@@ -40,11 +42,14 @@ namespace sdl_platformer
    Menu::select()
    {
       boost::filesystem::path p = boost::filesystem::current_path();
-      p /= "/build/apps/res/worlds/world.json";
+      p /= "/build/apps/res/worlds/";
+      std::string world_name;
       switch( m_selected )
       {
          case 0:
-            Game::current()->create_world(p.make_preferred().string().c_str() );
+            world_name = generate_world(1337, 70);
+            Game::current()->create_world(
+                  (p.make_preferred().string() + world_name).c_str() );
             Game::current()->destroy_menu();
             break;
         case 1:

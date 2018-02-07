@@ -1,2 +1,0 @@
-rendercontext only parsing decor_back
-implement spritefactory

@@ -63,10 +63,10 @@ namespace sdl_platformer
                m_bg,
                &m_bg_rect, &m_bg_rect);
       }
-      //for( const auto & elem : m_squares)
-      //{
-      //   elem.draw();
-      //}
+      for( const auto & elem : m_squares)
+      {
+         elem.draw();
+      }
       for( const auto & elem : m_circles)
       {
          elem.draw();
@@ -98,24 +98,24 @@ namespace sdl_platformer
                          elem["w"], elem["h"],
                          Color(200, 200, 200, 255) ) );
       }
-      for( auto & elem : parsed["circles"] )
-      {
-         m_circles.push_back(
-               Circle( elem["x"], elem["y"],
-                       elem["r"], Color( 200, 200, 200, 255) ) );
-      }
-      for( auto & elem : parsed["decor_back"] )
-      {
-         m_decor_back.push_back(
-               Rectangle( elem["x"], elem["y"],
-                          elem["w"], elem["h"],
-                          SpriteFactory::current()->get_sprite(elem["texture"]) ) );
-      }
-      std::string path = parsed["background"];
-      SDL_Surface * surface = IMG_Load( path.c_str() );
-      m_bg = SDL_CreateTextureFromSurface(
-            Screen::current()->get_renderer(), surface);
-      SDL_FreeSurface(surface);
+      //for( auto & elem : parsed["circles"] )
+      //{
+      //   m_circles.push_back(
+      //         Circle( elem["x"], elem["y"],
+      //                 elem["r"], Color( 200, 200, 200, 255) ) );
+      //}
+      //for( auto & elem : parsed["decor_back"] )
+      //{
+      //   m_decor_back.push_back(
+      //         Rectangle( elem["x"], elem["y"],
+      //                    elem["w"], elem["h"],
+      //                    SpriteFactory::current()->get_sprite(elem["texture"]) ) );
+      //}
+      //std::string path = parsed["background"];
+      //SDL_Surface * surface = IMG_Load( path.c_str() );
+      //m_bg = SDL_CreateTextureFromSurface(
+      //      Screen::current()->get_renderer(), surface);
+      //SDL_FreeSurface(surface);
       m_bg_rect.x = 0;
       m_bg_rect.y = 0;
       m_bg_rect.w = Screen::current()->get_width();
