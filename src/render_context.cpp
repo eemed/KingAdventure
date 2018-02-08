@@ -63,10 +63,10 @@ namespace sdl_platformer
                m_bg,
                &m_bg_rect, &m_bg_rect);
       }
-      for( const auto & elem : m_squares)
-      {
-         elem.draw();
-      }
+      //for( const auto & elem : m_squares)
+      //{
+      //   elem.draw();
+      //}
       for( const auto & elem : m_circles)
       {
          elem.draw();
