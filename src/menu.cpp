@@ -47,7 +47,7 @@ namespace sdl_platformer
       switch( m_selected )
       {
          case 0:
-            world_name = generate_world(1337, 70);
+            world_name = generate_world(1024, 70);
             Game::current()->create_world(
                   (p.make_preferred().string() + world_name).c_str() );
             Game::current()->destroy_menu();

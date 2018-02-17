@@ -26,7 +26,7 @@ namespace sdl_platformer
    World::update(float elapsed_time)
    {
       m_player.update(elapsed_time);
-      ScreenManager::current()->scroll_by_player(650, 500, 256, 100);
+      ScreenManager::current()->scroll_by_player(650, 500, 400, 300);
    }
 
    Player *
