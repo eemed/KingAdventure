@@ -2,12 +2,16 @@
 #define _CONNECTION_
 
 #include <string>
+#include <boost/thread/thread.hpp>
+#include <boost/bind.hpp>
+#include <boost/asio.hpp>
+#include <cstdlib>
 
 #include "current.h"
 
 namespace sdl_platform
 {
-   class Connection : Current<Network>
+   class Connection : Current<Connection>
    {
       private:
          std::string m_ip;
