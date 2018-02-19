@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "connection.h"
 
 using boost::asio::ip::tcp;
@@ -10,7 +8,7 @@ namespace sdl_platform
          boost::asio::io_service & io_service,
          tcp::resolver::iterator endpoint_iterator)
       : m_io_service( io_service ),
-        m_socket( io_service )
+      m_socket( io_service )
    {
       boost::asio::async_connect(
             m_socket,
@@ -37,89 +35,101 @@ namespace sdl_platform
       m_io_service.post(boost::bind(&Connection::do_close, this) );
    }
 
-   void 
+   void
    connect(const boost::system::error_code& error)
    {
-     if (!error)
-     {
-       boost::asio::async_read(
-             m_socket,
-             boost::asio::buffer(read_msg_.data(), chat_message::header_length),
-             boost::bind(
-                &Connection::handle_read_header,
-                this,
-                boost::asio::placeholders::error) );
-     }
+      if (!error)
+      {
+         boost::asio::async_read(
+               m_socket,
+               boost::asio::buffer(m_read_msg.data().c_str(), Message::header_length),
+               boost::bind(
+                  &Connection::handle_read_header,
+                  this,
+                  boost::asio::placeholders::error) );
+      }
    }
-   
-   void handle_read_header(const boost::system::error_code& error)
+
+   void
+   handle_read_header(const boost::system::error_code& error)
    {
-     if (!error && read_msg_.decode_header())
-     {
-       boost::asio::async_read(socket_,
-           boost::asio::buffer(read_msg_.body(), read_msg_.body_length()),
-           boost::bind(&chat_client::handle_read_body, this,
-             boost::asio::placeholders::error));
-     }
-     else
-     {
-       do_close();
-     }
+      if (!error && m_read_msg.decode_header())
+      {
+         boost::asio::async_read(m_socket,
+               boost::asio::buffer(m_read_msg.msg().c_str(), m_read_msg.msg_length() ),
+               boost::bind(&Connection::handle_read_body,
+                  this,
+                  boost::asio::placeholders::error) );
+      }
+      else
+      {
+         do_close();
+      }
    }
-   
-   void handle_read_body(const boost::system::error_code& error)
+
+   void
+   handle_read_body(const boost::system::error_code& error)
    {
-     if (!error)
-     {
-       std::cout.write(read_msg_.body(), read_msg_.body_length());
-       std::cout << "\n";
-       boost::asio::async_read(socket_,
-           boost::asio::buffer(read_msg_.data(), chat_message::header_length),
-           boost::bind(&chat_client::handle_read_header, this,
-             boost::asio::placeholders::error));
-     }
-     else
-     {
-       do_close();
-     }
+      if (!error)
+      {
+         //DO THE STUFF TO MESSAGE
+         std::cout.write(m_read_msg.msg(), m_read_msg.msg_length());
+         std::cout << "\n";
+         // -------
+
+         boost::asio::async_read(m_socket,
+               boost::asio::buffer(m_read_msg.data().c_str(), Message::HEADER_LEN),
+               boost::bind(&Connection::handle_read_header,
+                  this,
+                  boost::asio::placeholders::error));
+      }
+      else
+      {
+         do_close();
+      }
    }
-   
-   void do_write(chat_message msg)
+
+   void
+   do_write(Message msg)
    {
-     bool write_in_progress = !write_msgs_.empty();
-     write_msgs_.push_back(msg);
-     if (!write_in_progress)
-     {
-       boost::asio::async_write(socket_,
-           boost::asio::buffer(write_msgs_.front().data(),
-             write_msgs_.front().length()),
-           boost::bind(&chat_client::handle_write, this,
-             boost::asio::placeholders::error));
-     }
+      bool write_in_progress = !m_write_msgs.empty();
+      m_write_msgs.push_back(msg);
+      if (!write_in_progress)
+      {
+         boost::asio::async_write(m_socket,
+               boost::asio::buffer(m_write_msgs.front().data().c_str(),
+                  m_write_msgs.front().length()),
+               boost::bind(&Connection::handle_write,
+                  this,
+                  boost::asio::placeholders::error));
+      }
    }
-   
-   void handle_write(const boost::system::error_code& error)
+
+   void
+   handle_write(const boost::system::error_code& error)
    {
-     if (!error)
-     {
-       write_msgs_.pop_front();
-       if (!write_msgs_.empty())
-       {
-         boost::asio::async_write(socket_,
-             boost::asio::buffer(write_msgs_.front().data(),
-               write_msgs_.front().length()),
-             boost::bind(&chat_client::handle_write, this,
-               boost::asio::placeholders::error));
-       }
-     }
-     else
-     {
-       do_close();
-     }
+      if (!error)
+      {
+         m_write_msgs.pop_front();
+         if (!m_write_msgs.empty())
+         {
+            boost::asio::async_write(m_socket,
+                  boost::asio::buffer(m_write_msgs.front().data().c_str(),
+                     m_write_msgs.front().length()),
+                  boost::bind(&Connection::handle_write,
+                     this,
+                     boost::asio::placeholders::error));
+         }
+      }
+      else
+      {
+         do_close();
+      }
    }
-   
-   void do_close()
+
+   void
+   do_close()
    {
-     socket_.close();
+      m_socket.close();
    }
 }
