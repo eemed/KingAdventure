@@ -10,27 +10,18 @@
 
 #include "current.h"
 
-namespace sdl_platform
+namespace sdl_platformer
 {
    class Connection : Current<Connection>
    {
       private:
-         boost::asio::ioservice & m_io_service;
-         tcp::socket m_socket;
-         std::deque<Message> m_write_msgs;
-         Message m_read_msg;
+         boost::shared_ptr< boost::asio::io_service > m_io_service;
+         boost::shared_ptr< boost::asio::ip::tcp::socket > m_socket;
+         std::string m_connected_to;
+
+         void handle_connect(const boost::system::error_code & ec);
 
       public:
-         Connection();
-         ~Connection();
-
-         void close();
-         bool connect();
-         void handle_read_header(const boost::system::error_code& error);
-         void handle_read_body(const boost::system::error_code& error);
-         void do_write(Message msg);
-         void handle_write(const boost::system::error_code& error);
-         void do_close();
    };
 }
 #endif //_CONNECTION_
