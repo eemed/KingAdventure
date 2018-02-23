@@ -48,4 +48,14 @@ namespace sdl_platformer
                "] Connected to ", m_connected_to);
       }
    }
+
+   void
+   Connection::recv(const boost::system::error_code & ec)
+   {
+      std::string header;
+      m_socket.async_receive(
+            boost::asio::buffer(header, Packet::HEADER_LEN),
+            boost::bind( &Connection::handle_recv_header,
+               this, _1, header) );
+   }
 }

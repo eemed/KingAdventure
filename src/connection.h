@@ -22,7 +22,8 @@ namespace sdl_platformer
 
          void handle_connect(const boost::system::error_code & ec);
          void handle_send(const boost::system::error_code & ec);
-         void handle_recv(const boost::system::error_code & ec);
+         void handle_recv_header(const boost::system::error_code & ec);
+         void handle_recv_packet(const boost::system::error_code & ec);
 
       public:
    };
