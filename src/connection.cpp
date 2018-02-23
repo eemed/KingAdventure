@@ -52,10 +52,41 @@ namespace sdl_platformer
    void
    Connection::recv(const boost::system::error_code & ec)
    {
-      std::string header;
-      m_socket.async_receive(
-            boost::asio::buffer(header, Packet::HEADER_LEN),
-            boost::bind( &Connection::handle_recv_header,
-               this, _1, header) );
+      if( m_socket.is_open() and !ec)
+      {
+         m_socket.async_receive(
+               boost::asio::buffer(m_recv_msg, Packet::HEADER_LEN),
+               boost::bind( &Connection::handle_recv_header,
+                  this ) );
+      }
+   }
+
+   void
+   Connection::handle_recv_header(const boost::system::error_code & ec,
+         size_t size)
+   {
+      if( m_socket.is_open() and !ec )
+      {
+         size_t size = (size_t) atoi(m_recv+_msg);
+         m_socket.async_receive(
+               boost::asio::buffer(m_recv_msg, size),
+               boost::bind( &Connection::handle_recv_packet,
+                  this ) );
+      }
+   }
+
+   void
+   Connection::handle_recv_packet(const boost::system::error_code & ec)
+   {
+      if( !ec )
+      {
+         Packet packet;
+         packet.parse_from(m_recv_msg);
+         m_recv.push_back(packet);
+      }
+      else
+      {
+         m_recv_msg = nullptr;
+      }
    }
 }

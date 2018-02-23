@@ -18,10 +18,12 @@ namespace sdl_platformer
          boost::shared_ptr< boost::asio::io_service > m_io_service;
          boost::shared_ptr< boost::asio::ip::tcp::socket > m_socket;
          Deque< Packet > m_recv;
+         char * m_recv_msg;
          std::string m_connected_to;
 
          void handle_connect(const boost::system::error_code & ec);
          void handle_send(const boost::system::error_code & ec);
+         void handle_recv(const boost::system::error_code & ec);
          void handle_recv_header(const boost::system::error_code & ec);
          void handle_recv_packet(const boost::system::error_code & ec);
 
