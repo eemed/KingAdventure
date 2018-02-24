@@ -3,25 +3,27 @@
 
 #include <string>
 
-#include "current.h"
+#include "connection.h"
 
 namespace sdl_platformer
 {
-   class Network : Current<Network>
+   class Network
    {
       private:
-         bool connected;
-         std::string ip;
-         int port;
+         boost::shared_ptr< boost::asio::io_service > m_io_service;
+         bool m_connected;
+         Connection * m_curr_conn;
+         boost::thread_group m_threads;
 
       public:
          Network();
          ~Network();
 
-         bool connect_to(std::string ip, int port);
+         bool connect_to(std::string ip, std::string port);
          bool disconnect();
          bool send_message(std::string msg);
-         bool send_location_data(Player p);
+         void create_thread( boost::shared_ptr< boost::asio::io_service > m_io_service);
+         //bool send_location_data(Player p);
    };
 } // sdl_platformer
 #endif //_NETWORK_

@@ -1,5 +1,11 @@
 #include "connection.h"
 
+#include <iomanip>
+#include <sstream>
+//#include "easylogging++.h"
+
+//INITIALIZE_EASYLOGGINGPP
+
 namespace sdl_platformer
 {
    Connection::Connection(
@@ -7,7 +13,9 @@ namespace sdl_platformer
          std::string ip,
          std::string port)
       :  m_io_service( io_service ),
-         m_socket( new boost::asio::ip::tcp::socket( *m_io_service ))
+         m_socket( new boost::asio::ip::tcp::socket( *m_io_service )),
+         m_recv_msg( nullptr )
+
    {
       try
       {
@@ -19,12 +27,13 @@ namespace sdl_platformer
 
          //Connecting to host
          m_socket->async_connect( endpoint,
-               boost::bind( &Connection::handle_connect, this ) );
+               boost::bind( &Connection::handle_connect, this, _1 ) );
       }
       catch( std::exception & ex )
       {
-         pantheios::log_ERROR("Exception: ", ex);
-      }
+         m_connected = false;
+         //LOG(ERROR) << "Exception: " << ex;
+     }
    }
 
    Connection::~Connection()
@@ -39,39 +48,42 @@ namespace sdl_platformer
    {
       if( ec )
       {
-         pantheios::log_ERROR("[",  boost::this_thread::get_id(),
-               "] Error: ", ec);
+         m_connected = false;
+         std::cout << "Moi\n";
+         //LOG(ERROR) << "[" <<  boost::this_thread::get_id() <<
+         //      "] Error: " << ec;
       }
       else
       {
-         pantheios::log_DEBUG("[", boost::this_thread::get_id(),
-               "] Connected to ", m_connected_to);
+         m_connected = true;
+         std::cout << "oi\n";
+         //LOG(DEBUG) << "[" <<  boost::this_thread::get_id() <<
+         //      "] Connected to " << m_connected_to;
       }
    }
 
    void
-   Connection::recv(const boost::system::error_code & ec)
+   Connection::recv()
    {
-      if( m_socket.is_open() and !ec)
+      if( m_socket->is_open() )
       {
-         m_socket.async_receive(
+         m_socket->async_receive(
                boost::asio::buffer(m_recv_msg, Packet::HEADER_LEN),
                boost::bind( &Connection::handle_recv_header,
-                  this ) );
+                  this, _1) );
       }
    }
 
    void
-   Connection::handle_recv_header(const boost::system::error_code & ec,
-         size_t size)
+   Connection::handle_recv_header(const boost::system::error_code & ec)
    {
-      if( m_socket.is_open() and !ec )
+      if( m_socket->is_open() and !ec )
       {
-         size_t size = (size_t) atoi(m_recv+_msg);
-         m_socket.async_receive(
+         size_t size = (size_t) atoi(m_recv_msg);
+         m_socket->async_receive(
                boost::asio::buffer(m_recv_msg, size),
                boost::bind( &Connection::handle_recv_packet,
-                  this ) );
+                  this, _1 ) );
       }
    }
 
@@ -80,13 +92,46 @@ namespace sdl_platformer
    {
       if( !ec )
       {
-         Packet packet;
-         packet.parse_from(m_recv_msg);
-         m_recv.push_back(packet);
+         std::cout << "Error handle recv packet\n";
       }
       else
       {
          m_recv_msg = nullptr;
+      }
+   }
+
+   void
+   Connection::send(std::string msg)
+   {
+      if( m_socket->is_open() )
+      {
+         std::ostringstream oss;
+         oss << std::setfill('0') <<
+            std::setw(Packet::HEADER_LEN) << msg.size();
+
+         std::string with_header = oss.str() + msg;
+         //Sending
+         m_socket->async_send(
+               boost::asio::buffer(with_header, with_header.size() ),
+               boost::bind( &Connection::handle_send, this, _1) );
+         std::cout << "Sock open\n";
+      }
+      else
+      {
+         std::cout << "Sock not open\n";
+      }
+   }
+
+   void
+   Connection::handle_send(const boost::system::error_code & ec)
+   {
+      if( !ec )
+      {
+         std::cout << "Error handle send\n";
+      }
+      else
+      {
+         std::cout << "sent handle\n";
       }
    }
 }
