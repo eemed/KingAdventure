@@ -22,6 +22,7 @@ namespace sdl_platformer
       m_factory( SpriteFactory() ),
       m_menu( NULL ),
       m_world( NULL ),
+      m_network( 0 ),
       m_input( InputHandler() ),
       m_running( true )
    {
@@ -30,11 +31,16 @@ namespace sdl_platformer
       menu_items.push_back("Quit");
       m_menu = new (Menu) (menu_items);
       activate();
+      // TEST
+      m_network = new Network;
+      m_network->connect_to("localhost", "13371");
+      m_network->send_message("Hello");
    }
 
    Game::~Game()
    {
       deactivate();
+      delete m_network;
    }
 
    void

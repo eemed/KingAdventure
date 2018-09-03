@@ -9,6 +9,7 @@
 #include "input_handler.h"
 #include "current.h"
 #include "sprite_factory.h"
+#include "network.h"
 
 namespace sdl_platformer
 {
@@ -19,6 +20,7 @@ namespace sdl_platformer
          SpriteFactory m_factory;
          Menu * m_menu;
          World * m_world;
+         Network * m_network;
          InputHandler m_input;
          bool m_running;
 

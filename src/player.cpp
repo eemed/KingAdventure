@@ -220,7 +220,6 @@ namespace sdl_platformer
    void
    Player::draw() const
    {
-      //m_hitbox.draw();
       std::pair< SDL_Rect , SDL_Texture *> p = m_sprite_manager.get_player();
       //std::cout <<" x: " <<  p.first.x << "\n";
       //std::cout <<" y: " <<  p.first.y << "\n";
@@ -230,6 +229,7 @@ namespace sdl_platformer
          ( m_state.m_facing == RIGHT) ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
       SDL_RenderCopyEx(Screen::current()->get_renderer(),
             p.second, &p.first, &m_dest, 0, NULL, flip);
+      //m_hitbox.draw();
    }
 
    void
