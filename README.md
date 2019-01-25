@@ -1,4 +1,4 @@
-#KingAdventure
+# KingAdventure
 
 * Personal project for practicing sdl
 * Want to get better at c++
